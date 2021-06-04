@@ -33,7 +33,7 @@ To begin the migration process, copy the GlobalSignEsentMigrator.dll to the Prog
 * Copy GloabalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory
 
 * Update the CAProxyServer.config file
-  * Update the CAConnection section to point at the SectigoCAProxyclass
+  * Update the CAConnection section to point at the GloabalSignCAProxy class
   ```xml
   <alias alias="CAConnector" type="Keyfactor.Extensions.AnyGateway.GlobalSign.GloabalSignCAProxy, GloabalSignCAProxy"/>
   ```
