@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://system.globalsign.com/kb/ws/v1/" xmlns:ns1="http://cxf.apache.org/bindings/xformat" name="GASService" targetNamespace="https://system.globalsign.com/kb/ws/v1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns:ns1="https://system.globalsign.com/kb/ws/" elementFormDefault="unqualified" targetNamespace="https://system.globalsign.com/kb/ws/v1/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="https://system.globalsign.com/kb/ws/" />
+      <xs:element name="DecodeCSR" type="tns:DecodeCSR" />
+      <xs:element name="DecodeCSRResponse" type="tns:DecodeCSRResponse" />
+      <xs:element name="DeletePkcs12" type="tns:DeletePkcs12" />
+      <xs:element name="DeletePkcs12Response" type="tns:DeletePkcs12Response" />
+      <xs:element name="GetCertificateOrders" type="tns:GetCertificateOrders" />
+      <xs:element name="GetCertificateOrdersResponse" type="tns:GetCertificateOrdersResponse" />
+      <xs:element name="GetModifiedOrders" type="tns:GetModifiedOrders" />
+      <xs:element name="GetModifiedOrdersResponse" type="tns:GetModifiedOrdersResponse" />
+      <xs:element name="GetOrderByDateRange" type="tns:GetOrderByDateRange" />
+      <xs:element name="GetOrderByDateRangeResponse" type="tns:GetOrderByDateRangeResponse" />
+      <xs:element name="GetOrderByExpirationDate" type="tns:GetOrderByExpirationDate" />
+      <xs:element name="GetOrderByExpirationDateResponse" type="tns:GetOrderByExpirationDateResponse" />
+      <xs:element name="GetOrderByOrderID" type="tns:GetOrderByOrderID" />
+      <xs:element name="GetOrderByOrderIDResponse" type="tns:GetOrderByOrderIDResponse" />
+      <xs:element name="QbV1GetModifiedOrdersRequest" type="tns:QbV1GetModifiedOrdersRequest" />
+      <xs:element name="QbV1GetModifiedOrdersResponse" type="tns:QbV1GetModifiedOrdersResponse" />
+      <xs:element name="QbV1GetOrderByOrderIdRequest" type="tns:QbV1GetOrderByOrderIdRequest" />
+      <xs:element name="QbV1GetOrderByOrderIdResponse" type="tns:QbV1GetOrderByOrderIdResponse" />
+      <xs:element name="QbV1ReIssueRequest" type="tns:QbV1ReIssueRequest" />
+      <xs:element name="QbV1ReIssueResponse" type="tns:QbV1ReIssueResponse" />
+      <xs:element name="QbV1ValidateOrderParametersRequest" type="tns:QbV1ValidateOrderParametersRequest" />
+      <xs:element name="QbV1ValidateOrderParametersResponse" type="tns:QbV1ValidateOrderParametersResponse" />
+      <xs:element name="ReIssue" type="tns:ReIssue" />
+      <xs:element name="ReIssueResponse" type="tns:ReIssueResponse" />
+      <xs:element name="ReIssueWithoutCSR" type="tns:ReIssueWithoutCSR" />
+      <xs:element name="ReIssueWithoutCSRResponse" type="tns:ReIssueWithoutCSRResponse" />
+      <xs:element name="ToggleRenewalNotice" type="tns:ToggleRenewalNotice" />
+      <xs:element name="ToggleRenewalNoticeResponse" type="tns:ToggleRenewalNoticeResponse" />
+      <xs:element name="ValidateOrderParameters" type="tns:ValidateOrderParameters" />
+      <xs:element name="ValidateOrderParametersResponse" type="tns:ValidateOrderParametersResponse" />
+      <xs:element name="certificatePreview" type="tns:CertificatePreview" />
+      <xs:element name="csrData" type="tns:CSRData" />
+      <xs:element name="modificationEvent" type="tns:ModificationEvent" />
+      <xs:element name="modificationEvents" type="tns:ModificationEvents" />
+      <xs:element name="orderInfo" type="tns:OrderInfo" />
+      <xs:element name="orderOption" type="tns:OrderOption" />
+      <xs:element name="orderSubInfo" type="tns:OrderSubInfo" />
+      <xs:element name="qbOrderDetail" type="tns:OrderDetail" />
+      <xs:element name="qbOrderDetails" type="tns:OrderDetails" />
+      <xs:element name="qbOrganizationInfo" type="tns:OrganizationInfoS" />
+      <xs:element name="qbV1DecodeCsrRequest" type="ns1:QbV1DecodeCsrRequest" />
+      <xs:element name="qbV1DecodeCsrResponse" type="ns1:QbV1DecodeCsrResponse" />
+      <xs:element name="qbV1DeletePkcs12Request" type="tns:QbV1DeletePkcs12Request" />
+      <xs:element name="qbV1DeletePkcs12Response" type="tns:QbV1DeletePkcs12Response" />
+      <xs:element name="qbV1GetCertificateOrdersRequest" type="ns1:QbV1GetCertificateOrdersRequest" />
+      <xs:element name="qbV1GetCertificateOrdersResponse" type="ns1:QbV1GetCertificateOrdersResponse" />
+      <xs:element name="qbV1GetOrderByDateRangeRequest" type="tns:QbV1GetOrderByDateRangeRequest" />
+      <xs:element name="qbV1GetOrderByDateRangeResponse" type="tns:QbV1GetOrderByDateRangeResponse" />
+      <xs:element name="qbV1GetOrderByExpirationDateRequest" type="ns1:QbV1GetOrderByExpirationDateRequest" />
+      <xs:element name="qbV1GetOrderByExpirationDateResponse" type="ns1:QbV1GetOrderByExpirationDateResponse" />
+      <xs:element name="qbV1ReIssueWithoutCSRRequest" type="tns:QbV1ReIssueWithoutCSRRequest" />
+      <xs:element name="qbV1ReIssueWithoutCSRResponse" type="tns:QbV1ReIssueWithoutCSRResponse" />
+      <xs:element name="qbV1ToggleRenewalNoticeRequest" type="ns1:QbV1ToggleRenewalNoticeRequest" />
+      <xs:element name="qbV1ToggleRenewalNoticeResponse" type="ns1:QbV1ToggleRenewalNoticeResponse" />
+      <xs:complexType name="GetOrderByExpirationDate">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:QbV1GetOrderByExpirationDateRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QueryRequestHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AuthToken" type="tns:AuthToken" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AuthToken">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UserName" type="xs:string" />
+          <xs:element minOccurs="0" name="Password" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetOrderByExpirationDateResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:QbV1GetOrderByExpirationDateResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QueryResponseHeader">
+        <xs:sequence>
+          <xs:element name="SuccessCode" type="xs:int" />
+          <xs:element minOccurs="0" name="Errors" type="tns:Errors" />
+          <xs:element minOccurs="0" name="Timestamp" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Errors">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Error" type="tns:Error" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Error">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ErrorCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ErrorField" type="xs:string" />
+          <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchOrderDetails">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="SearchOrderDetail" type="tns:SearchOrderDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchOrderDetail">
+        <xs:sequence>
+          <xs:element name="OrderID" type="xs:string" />
+          <xs:element minOccurs="0" name="BaseOption" nillable="true" type="xs:string" />
+          <xs:element name="ProductCode" type="xs:string" />
+          <xs:element name="OrderKind" type="xs:string" />
+          <xs:element name="Licenses" type="xs:int" />
+          <xs:element name="OrderRequestDate" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderIssueDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderCanceledDate" nillable="true" type="xs:string" />
+          <xs:element name="OrderStatus" type="xs:string" />
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element name="Months" type="xs:int" />
+          <xs:element name="SubId" type="xs:string" />
+          <xs:element name="FQDN" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReIssue">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:QbV1ReIssueRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ReIssueRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="tns:OrderRequestHeader" />
+          <xs:element name="OrderParameter" type="tns:OrderParameter" />
+          <xs:element name="TargetOrderID" type="xs:string" />
+          <xs:element minOccurs="0" name="HashAlgorithm" type="xs:string" />
+          <xs:element minOccurs="0" name="Extensions" nillable="true" type="tns:Extensions" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderRequestHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AuthToken" type="tns:AuthToken" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderParameter">
+        <xs:sequence>
+          <xs:element name="CSR" type="xs:string" />
+          <xs:element minOccurs="0" name="DNSNames" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Extensions">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" nillable="true" type="tns:Extension" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Extension">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" />
+          <xs:element name="Value" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReIssueResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="tns:QbV1ReIssueResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ReIssueResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="tns:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="OrderID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TargetOrderID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderResponseHeader">
+        <xs:sequence>
+          <xs:element name="SuccessCode" type="xs:int" />
+          <xs:element minOccurs="0" name="Errors" type="tns:Errors" />
+          <xs:element minOccurs="0" name="Timestamp" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ValidateOrderParameters">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:QbV1ValidateOrderParametersRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ValidateOrderParametersRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="tns:OrderRequestHeader" />
+          <xs:element name="OrderRequestParameter" type="tns:ValidateOrderRequestParameter" />
+          <xs:element minOccurs="0" name="FQDN" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DVCSRInfo" nillable="true" type="tns:DVCSRInfo" />
+          <xs:element minOccurs="0" name="OVCSRInfo" nillable="true" type="tns:OVCSRInfo" />
+          <xs:element minOccurs="0" name="SANEntries" nillable="true" type="tns:SANEntries" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ValidateOrderRequestParameter">
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:OrderRequestParameter">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="KeyLength" nillable="true" type="xs:string" />
+              <xs:element minOccurs="0" name="PIN" nillable="true" type="xs:string" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="OrderRequestParameter">
+        <xs:sequence>
+          <xs:element name="ProductCode" type="xs:string" />
+          <xs:element minOccurs="0" name="BaseOption" nillable="true" type="xs:string" />
+          <xs:element name="OrderKind" type="xs:string" />
+          <xs:element name="Licenses" type="xs:string" />
+          <xs:element minOccurs="0" name="Options" nillable="true" type="tns:Options" />
+          <xs:element name="ValidityPeriod" type="tns:ValidityPeriod" />
+          <xs:element name="CSR" type="xs:string" />
+          <xs:element minOccurs="0" name="RenewalTargetOrderID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TargetCERT" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SpecialInstructions" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Coupon" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Campaign" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Options">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Option" nillable="true" type="tns:Option" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Option">
+        <xs:sequence>
+          <xs:element name="OptionName" type="xs:string" />
+          <xs:element name="OptionValue" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ValidityPeriod">
+        <xs:sequence>
+          <xs:element name="Months" type="xs:string" />
+          <xs:element minOccurs="0" name="NotBefore" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NotAfter" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DVCSRInfo">
+        <xs:sequence>
+          <xs:element name="Country" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OVCSRInfo">
+        <xs:sequence>
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationUnit" nillable="true" type="xs:string" />
+          <xs:element name="Locality" type="xs:string" />
+          <xs:element name="StateOrProvince" type="xs:string" />
+          <xs:element name="Country" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SANEntries">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SANEntry" nillable="true" type="tns:SANEntry" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SANEntry">
+        <xs:sequence>
+          <xs:element name="SANOptionType" type="xs:string" />
+          <xs:element name="SubjectAltName" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ValidateOrderParametersResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="tns:QbV1ValidateOrderParametersResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ValidateOrderParametersResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="tns:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="Price" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ValidityPeriod" nillable="true" type="tns:ValidityPeriod" />
+          <xs:element minOccurs="0" name="ParsedCSR" nillable="true" type="tns:ParsedCSR" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ParsedCSR">
+        <xs:sequence>
+          <xs:element name="Subject" type="xs:string" />
+          <xs:element name="DomainName" type="xs:string" />
+          <xs:element name="Country" type="xs:string" />
+          <xs:element name="Email" type="xs:string" />
+          <xs:element name="Locality" type="xs:string" />
+          <xs:element name="Organization" type="xs:string" />
+          <xs:element name="OrganizationUnit" type="xs:string" />
+          <xs:element name="State" type="xs:string" />
+          <xs:element name="IsValidDomainName" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReIssueWithoutCSR">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:QbV1ReIssueWithoutCSRRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ReIssueWithoutCSRRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="tns:OrderRequestHeader" />
+          <xs:element name="TargetOrderID" type="xs:string" />
+          <xs:element minOccurs="0" name="HashAlgorithm" type="xs:string" />
+          <xs:element name="ReIssueParameterWithoutCSR" type="tns:ReIssueParameterWithoutCSR" />
+          <xs:element minOccurs="0" name="Extensions" nillable="true" type="tns:Extensions" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReIssueParameterWithoutCSR">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Pin" type="xs:string" />
+          <xs:element minOccurs="0" name="KeyLength" type="xs:string" />
+          <xs:element minOccurs="0" name="DNSNames" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReIssueWithoutCSRResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="tns:QbV1ReIssueWithoutCSRResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ReIssueWithoutCSRResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="tns:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="OrderID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TargetOrderID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetOrderByOrderID">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:QbV1GetOrderByOrderIdRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetOrderByOrderIdRequest">
+        <xs:sequence>
+          <xs:element name="QueryRequestHeader" type="tns:QueryRequestHeader" />
+          <xs:element name="OrderID" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderQueryOption" nillable="true" type="tns:OrderQueryOption" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderQueryOption">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderStatus" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReturnOrderOption" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReturnCertificateInfo" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReturnFulfillment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReturnCACerts" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReturnOriginalCSR" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReturnPKCS12" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReturnSANEntries" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetOrderByOrderIDResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="tns:QbV1GetOrderByOrderIdResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetOrderByOrderIdResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="tns:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="OrderID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderDetail" nillable="true" type="tns:OrderDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderDetail">
+        <xs:sequence>
+          <xs:element name="OrderInfo" type="tns:OrderInfo" />
+          <xs:element name="OrderSubInfo" type="tns:OrderSubInfo" />
+          <xs:element minOccurs="0" name="OrderOption" nillable="true" type="tns:OrderOption" />
+          <xs:element minOccurs="0" name="CertificateInfo" nillable="true" type="tns:CertificateInfo" />
+          <xs:element minOccurs="0" name="SANEntries" nillable="true" type="tns:SANEntries" />
+          <xs:element minOccurs="0" name="Fulfillment" nillable="true" type="tns:QbFulfillment" />
+          <xs:element minOccurs="0" name="ModificationEvents" nillable="true" type="tns:ModificationEvents" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderInfo">
+        <xs:sequence>
+          <xs:element name="OrderId" type="xs:string" />
+          <xs:element minOccurs="0" name="OriginalOrderIDForRenewal" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OriginalOrderIDForReIssue" nillable="true" type="xs:string" />
+          <xs:element name="ProductCode" type="xs:string" />
+          <xs:element minOccurs="0" name="BaseOption" nillable="true" type="xs:string" />
+          <xs:element name="OrderKind" type="xs:string" />
+          <xs:element name="Licenses" type="xs:string" />
+          <xs:element minOccurs="0" name="ExpressOption" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ValidityPeriodCustomizeOption" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="InsuranceOption" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="GSSupportOption" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="RenewalExtentionOption" nillable="true" type="xs:string" />
+          <xs:element name="DomainName" type="xs:string" />
+          <xs:element name="OrderDate" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderCompleteDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderCanceledDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderDeactivatedDate" nillable="true" type="xs:string" />
+          <xs:element name="OrderStatus" type="xs:string" />
+          <xs:element name="Price" type="xs:string" />
+          <xs:element name="Currency" type="xs:string" />
+          <xs:element name="ValidityPeriod" type="tns:ValidityPeriod" />
+          <xs:element minOccurs="0" name="SpecialInstructions" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderSubInfo">
+        <xs:sequence>
+          <xs:element name="CSRSkipOrderFlag" type="xs:boolean" />
+          <xs:element name="DNSOrderFlag" type="xs:boolean" />
+          <xs:element name="TrustedOrderFlag" type="xs:boolean" />
+          <xs:element name="P12DeleteStatus" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="0" name="P12DeleteDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="VerificationUrl" nillable="true" type="xs:string" />
+          <xs:element name="SubId" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderOption">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ApproverNotifiedDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ApproverConfirmDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ApproverEmailAddress" nillable="true" type="xs:string" />
+          <xs:element name="OrganizationInfo" type="tns:OrganizationInfoS" />
+          <xs:element minOccurs="0" name="RequestorInfo" nillable="true" type="tns:RequestorApproverInfo" />
+          <xs:element minOccurs="0" name="ApproverInfo" nillable="true" type="tns:RequestorApproverInfo" />
+          <xs:element minOccurs="0" name="AuthorizedSignerInfo" nillable="true" type="tns:AuthorizedSignerInfo" />
+          <xs:element minOccurs="0" name="JurisdictionInfo" nillable="true" type="tns:JurisdictionInfo" />
+          <xs:element minOccurs="0" name="ContactInfo" nillable="true" type="tns:ContactInfo" />
+          <xs:element minOccurs="0" name="SecondContactInfo" nillable="true" type="tns:SecondContactInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrganizationInfoS">
+        <xs:sequence>
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element minOccurs="0" name="CreditAgency" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="BusinessAssumedName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="BusinessCategoryCode" nillable="true" type="xs:string" />
+          <xs:element name="OrganizationAddress" type="tns:OrganizationAddressInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrganizationAddressInfo">
+        <xs:sequence>
+          <xs:element name="AddressLine1" type="xs:string" />
+          <xs:element minOccurs="0" name="AddressLine2" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="AddressLine3" nillable="true" type="xs:string" />
+          <xs:element name="City" type="xs:string" />
+          <xs:element name="Region" type="xs:string" />
+          <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string" />
+          <xs:element name="Country" type="xs:string" />
+          <xs:element name="Phone" type="xs:string" />
+          <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RequestorApproverInfo">
+        <xs:sequence>
+          <xs:element name="FirstName" type="xs:string" />
+          <xs:element name="LastName" type="xs:string" />
+          <xs:element name="Function" type="xs:string" />
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element name="OrganizationUnit" type="xs:string" />
+          <xs:element name="Phone" type="xs:string" />
+          <xs:element name="Email" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AuthorizedSignerInfo">
+        <xs:sequence>
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element name="FirstName" type="xs:string" />
+          <xs:element name="LastName" type="xs:string" />
+          <xs:element name="Function" type="xs:string" />
+          <xs:element name="Phone" type="xs:string" />
+          <xs:element name="Email" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="JurisdictionInfo">
+        <xs:sequence>
+          <xs:element name="JurisdictionCountry" type="xs:string" />
+          <xs:element minOccurs="0" name="JurisdictionState" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="JurisdictionLocality" nillable="true" type="xs:string" />
+          <xs:element name="IncorporationAgencyRegistrationNumber" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ContactInfo">
+        <xs:sequence>
+          <xs:element name="FirstName" type="xs:string" />
+          <xs:element name="LastName" type="xs:string" />
+          <xs:element name="Phone" type="xs:string" />
+          <xs:element name="Email" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SecondContactInfo">
+        <xs:sequence>
+          <xs:element name="FirstName" type="xs:string" />
+          <xs:element name="LastName" type="xs:string" />
+          <xs:element name="Email" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CertificateInfo">
+        <xs:sequence>
+          <xs:element name="CertificateStatus" type="xs:string" />
+          <xs:element name="StartDate" type="xs:string" />
+          <xs:element name="EndDate" type="xs:string" />
+          <xs:element name="CommonName" type="xs:string" />
+          <xs:element name="SerialNumber" type="xs:string" />
+          <xs:element name="SubjectName" type="xs:string" />
+          <xs:element minOccurs="0" name="DNSNames" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbFulfillment">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CACertificates" nillable="true" type="tns:CACertificates" />
+          <xs:element minOccurs="0" name="ServerCertificate" nillable="true" type="tns:ServerCertificate" />
+          <xs:element minOccurs="0" name="OriginalCSR" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PKCS12Cert" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CACertificates">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CACertificate" nillable="true" type="tns:CACertificate" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CACertificate">
+        <xs:sequence>
+          <xs:element name="CACertType" type="xs:string" />
+          <xs:element name="CACert" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ServerCertificate">
+        <xs:sequence>
+          <xs:element name="X509Cert" type="xs:string" />
+          <xs:element name="PKCS7Cert" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ModificationEvents">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="ModificationEvent" type="tns:ModificationEvent" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ModificationEvent">
+        <xs:sequence>
+          <xs:element name="ModificationEventName" type="xs:string" />
+          <xs:element name="ModificationEventTimestamp" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ToggleRenewalNotice">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:QbV1ToggleRenewalNoticeRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ToggleRenewalNoticeResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:QbV1ToggleRenewalNoticeResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DecodeCSR">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:QbV1DecodeCsrRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DecodeCSRResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:QbV1DecodeCsrResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CSRData">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CommonName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Organization" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationUnit" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Locality" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="EmailAddress" nillable="true" type="xs:string" />
+          <xs:element name="KeyLength" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CertificatePreview">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CommonName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Organization" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationUnit" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Locality" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string" />
+          <xs:element name="KeyLength" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetCertificateOrders">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:QbV1GetCertificateOrdersRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetCertificateOrdersResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:QbV1GetCertificateOrdersResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DeletePkcs12">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:QbV1DeletePkcs12Request" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1DeletePkcs12Request">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="tns:OrderRequestHeader" />
+          <xs:element name="OrderId" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DeletePkcs12Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="tns:QbV1DeletePkcs12Response" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1DeletePkcs12Response">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="tns:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="OrderId" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetModifiedOrders">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:QbV1GetModifiedOrdersRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetModifiedOrdersRequest">
+        <xs:sequence>
+          <xs:element name="QueryRequestHeader" type="tns:QueryRequestHeader" />
+          <xs:element name="FromDate" type="xs:string" />
+          <xs:element name="ToDate" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderQueryOption" nillable="true" type="tns:OrderQueryOption" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetModifiedOrdersResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="tns:QbV1GetModifiedOrdersResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetModifiedOrdersResponse">
+        <xs:sequence>
+          <xs:element name="QueryResponseHeader" type="tns:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="FromDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ToDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderDetails" nillable="true" type="tns:OrderDetails" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderDetails">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="OrderDetail" type="tns:OrderDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetOrderByDateRange">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:QbV1GetOrderByDateRangeRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetOrderByDateRangeRequest">
+        <xs:sequence>
+          <xs:element name="QueryRequestHeader" type="tns:QueryRequestHeader" />
+          <xs:element name="FromDate" type="xs:string" />
+          <xs:element name="ToDate" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderQueryOption" nillable="true" type="tns:OrderQueryOption" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetOrderByDateRangeResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="tns:QbV1GetOrderByDateRangeResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetOrderByDateRangeResponse">
+        <xs:sequence>
+          <xs:element name="QueryResponseHeader" type="tns:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="FromDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ToDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderDetails" nillable="true" type="tns:OrderDetails" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns:ns1="https://system.globalsign.com/kb/ws/v1/" targetNamespace="https://system.globalsign.com/kb/ws/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="https://system.globalsign.com/kb/ws/v1/" />
+      <xs:complexType name="QbV1GetOrderByExpirationDateRequest">
+        <xs:sequence>
+          <xs:element name="QueryRequestHeader" type="ns1:QueryRequestHeader" />
+          <xs:element minOccurs="0" name="ExpirationFromDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ExpirationToDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="FQDN" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderKind" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderStatus" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SubID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetOrderByExpirationDateResponse">
+        <xs:sequence>
+          <xs:element name="QueryResponseHeader" type="ns1:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="SearchOrderDetails" nillable="true" type="ns1:SearchOrderDetails" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ToggleRenewalNoticeRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="OrderID" type="xs:string" />
+          <xs:element name="RenewalNotice" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1ToggleRenewalNoticeResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="OrderID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1DecodeCsrRequest">
+        <xs:sequence>
+          <xs:element name="QueryRequestHeader" type="ns1:QueryRequestHeader" />
+          <xs:element name="CSR" type="xs:string" />
+          <xs:element name="ProductType" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1DecodeCsrResponse">
+        <xs:sequence>
+          <xs:element name="QueryResponseHeader" type="ns1:QueryResponseHeader" />
+          <xs:element name="CSRData" type="ns1:CSRData" />
+          <xs:element name="CertificatePreview" type="ns1:CertificatePreview" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetCertificateOrdersRequest">
+        <xs:sequence>
+          <xs:element name="QueryRequestHeader" type="ns1:QueryRequestHeader" />
+          <xs:element minOccurs="0" name="FromDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ToDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="FQDN" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ProductCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderStatus" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SubID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QbV1GetCertificateOrdersResponse">
+        <xs:sequence>
+          <xs:element name="QueryResponseHeader" type="ns1:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="SearchOrderDetails" nillable="true" type="ns1:SearchOrderDetails" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetOrderByExpirationDate">
+    <wsdl:part name="parameters" element="tns:GetOrderByExpirationDate" />
+  </wsdl:message>
+  <wsdl:message name="ReIssue">
+    <wsdl:part name="parameters" element="tns:ReIssue" />
+  </wsdl:message>
+  <wsdl:message name="ValidateOrderParameters">
+    <wsdl:part name="parameters" element="tns:ValidateOrderParameters" />
+  </wsdl:message>
+  <wsdl:message name="DeletePkcs12Response">
+    <wsdl:part name="parameters" element="tns:DeletePkcs12Response" />
+  </wsdl:message>
+  <wsdl:message name="ReIssueResponse">
+    <wsdl:part name="parameters" element="tns:ReIssueResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReIssueWithoutCSR">
+    <wsdl:part name="parameters" element="tns:ReIssueWithoutCSR" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByDateRangeResponse">
+    <wsdl:part name="parameters" element="tns:GetOrderByDateRangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderID">
+    <wsdl:part name="parameters" element="tns:GetOrderByOrderID" />
+  </wsdl:message>
+  <wsdl:message name="GetCertificateOrdersResponse">
+    <wsdl:part name="parameters" element="tns:GetCertificateOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidateOrderParametersResponse">
+    <wsdl:part name="parameters" element="tns:ValidateOrderParametersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderIDResponse">
+    <wsdl:part name="parameters" element="tns:GetOrderByOrderIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="DecodeCSR">
+    <wsdl:part name="parameters" element="tns:DecodeCSR" />
+  </wsdl:message>
+  <wsdl:message name="GetCertificateOrders">
+    <wsdl:part name="parameters" element="tns:GetCertificateOrders" />
+  </wsdl:message>
+  <wsdl:message name="ToggleRenewalNoticeResponse">
+    <wsdl:part name="parameters" element="tns:ToggleRenewalNoticeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetModifiedOrdersResponse">
+    <wsdl:part name="parameters" element="tns:GetModifiedOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByDateRange">
+    <wsdl:part name="parameters" element="tns:GetOrderByDateRange" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByExpirationDateResponse">
+    <wsdl:part name="parameters" element="tns:GetOrderByExpirationDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReIssueWithoutCSRResponse">
+    <wsdl:part name="parameters" element="tns:ReIssueWithoutCSRResponse" />
+  </wsdl:message>
+  <wsdl:message name="ToggleRenewalNotice">
+    <wsdl:part name="parameters" element="tns:ToggleRenewalNotice" />
+  </wsdl:message>
+  <wsdl:message name="DeletePkcs12">
+    <wsdl:part name="parameters" element="tns:DeletePkcs12" />
+  </wsdl:message>
+  <wsdl:message name="GetModifiedOrders">
+    <wsdl:part name="parameters" element="tns:GetModifiedOrders" />
+  </wsdl:message>
+  <wsdl:message name="DecodeCSRResponse">
+    <wsdl:part name="parameters" element="tns:DecodeCSRResponse" />
+  </wsdl:message>
+  <wsdl:portType name="GASV1">
+    <wsdl:operation name="GetOrderByExpirationDate">
+      <wsdl:input name="GetOrderByExpirationDate" message="tns:GetOrderByExpirationDate" />
+      <wsdl:output name="GetOrderByExpirationDateResponse" message="tns:GetOrderByExpirationDateResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ReIssue">
+      <wsdl:input name="ReIssue" message="tns:ReIssue" />
+      <wsdl:output name="ReIssueResponse" message="tns:ReIssueResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateOrderParameters">
+      <wsdl:input name="ValidateOrderParameters" message="tns:ValidateOrderParameters" />
+      <wsdl:output name="ValidateOrderParametersResponse" message="tns:ValidateOrderParametersResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ReIssueWithoutCSR">
+      <wsdl:input name="ReIssueWithoutCSR" message="tns:ReIssueWithoutCSR" />
+      <wsdl:output name="ReIssueWithoutCSRResponse" message="tns:ReIssueWithoutCSRResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderID">
+      <wsdl:input name="GetOrderByOrderID" message="tns:GetOrderByOrderID" />
+      <wsdl:output name="GetOrderByOrderIDResponse" message="tns:GetOrderByOrderIDResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ToggleRenewalNotice">
+      <wsdl:input name="ToggleRenewalNotice" message="tns:ToggleRenewalNotice" />
+      <wsdl:output name="ToggleRenewalNoticeResponse" message="tns:ToggleRenewalNoticeResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DecodeCSR">
+      <wsdl:input name="DecodeCSR" message="tns:DecodeCSR" />
+      <wsdl:output name="DecodeCSRResponse" message="tns:DecodeCSRResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCertificateOrders">
+      <wsdl:input name="GetCertificateOrders" message="tns:GetCertificateOrders" />
+      <wsdl:output name="GetCertificateOrdersResponse" message="tns:GetCertificateOrdersResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DeletePkcs12">
+      <wsdl:input name="DeletePkcs12" message="tns:DeletePkcs12" />
+      <wsdl:output name="DeletePkcs12Response" message="tns:DeletePkcs12Response" />
+    </wsdl:operation>
+    <wsdl:operation name="GetModifiedOrders">
+      <wsdl:input name="GetModifiedOrders" message="tns:GetModifiedOrders" />
+      <wsdl:output name="GetModifiedOrdersResponse" message="tns:GetModifiedOrdersResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByDateRange">
+      <wsdl:input name="GetOrderByDateRange" message="tns:GetOrderByDateRange" />
+      <wsdl:output name="GetOrderByDateRangeResponse" message="tns:GetOrderByDateRangeResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GASServiceSoapBinding" type="tns:GASV1">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetOrderByExpirationDate">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetOrderByExpirationDate">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetOrderByExpirationDateResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReIssue">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="ReIssue">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ReIssueResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateOrderParameters">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="ValidateOrderParameters">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ValidateOrderParametersResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReIssueWithoutCSR">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="ReIssueWithoutCSR">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ReIssueWithoutCSRResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderID">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetOrderByOrderID">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetOrderByOrderIDResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ToggleRenewalNotice">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="ToggleRenewalNotice">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ToggleRenewalNoticeResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DecodeCSR">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="DecodeCSR">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="DecodeCSRResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCertificateOrders">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetCertificateOrders">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetCertificateOrdersResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeletePkcs12">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="DeletePkcs12">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="DeletePkcs12Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetModifiedOrders">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetModifiedOrders">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetModifiedOrdersResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByDateRange">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetOrderByDateRange">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetOrderByDateRangeResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GASService">
+    <wsdl:port name="GASV1Port" binding="tns:GASServiceSoapBinding">
+      <soap:address location="https://system.globalsign.com/kb/ws/v1/GASService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Keyfactor.AnyGateway.GlobalSign.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="GlobalSignCAProxy_Services_Query_GASService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://system.globalsign.com/kb/ws/v1/GASService</Value>
+    </Setting>
+    <Setting Name="GlobalSignCAProxy_Services_Order_ManagedSSLService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://system.globalsign.com/kb/ws/v2/ManagedSSLService</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

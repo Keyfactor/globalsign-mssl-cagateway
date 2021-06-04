@@ -1,0 +1,1134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://system.globalsign.com/kb/ws/v2/" xmlns:ns1="http://cxf.apache.org/bindings/xformat" name="ManagedSSLService" targetNamespace="https://system.globalsign.com/kb/ws/v2/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns:ns1="https://system.globalsign.com/kb/ws/v1/" elementFormDefault="unqualified" targetNamespace="https://system.globalsign.com/kb/ws/v2/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="https://system.globalsign.com/kb/ws/v1/" />
+      <xs:element name="AddDomainToProfile" type="tns:AddDomainToProfile" />
+      <xs:element name="AddDomainToProfileResponse" type="tns:AddDomainToProfileResponse" />
+      <xs:element name="AddMSSLDomain" type="tns:AddMSSLDomain" />
+      <xs:element name="AddMSSLDomainResponse" type="tns:AddMSSLDomainResponse" />
+      <xs:element name="AddMSSLProfile" type="tns:AddMSSLProfile" />
+      <xs:element name="AddMSSLProfileResponse" type="tns:AddMSSLProfileResponse" />
+      <xs:element name="BmAddMSSLProfileRequest" type="ns1:BmAddMSSLProfileRequest" />
+      <xs:element name="BmV1AddDomainToProfileRequest" type="ns1:BmV1AddDomainToProfileRequest" />
+      <xs:element name="BmV1AddDomainToProfileResponse" type="ns1:BmV1AddDomainToProfileResponse" />
+      <xs:element name="BmV1AddMsslDomainRequest" type="ns1:BmV1AddMsslDomainRequest" />
+      <xs:element name="BmV1AddMsslDomainResponse" type="ns1:BmV1AddMsslDomainResponse" />
+      <xs:element name="BmV1ChangeSubjectAltNameRequest" type="ns1:BmV1ChangeSubjectAltNameRequest" />
+      <xs:element name="BmV1ChangeSubjectAltNameResponse" type="ns1:BmV1ChangeSubjectAltNameResponse" />
+      <xs:element name="BmV1GetDomainApproverListRequest" type="ns1:BmV1GetDomainApproverListRequest" />
+      <xs:element name="BmV1GetDomainApproverListResponse" type="ns1:BmV1GetDomainApproverListResponse" />
+      <xs:element name="BmV1GetDomainsRequest" type="ns1:BmV1GetDomainsRequest" />
+      <xs:element name="BmV1GetDomainsResponse" type="ns1:BmV1GetDomainsResponse" />
+      <xs:element name="BmV1GetMsslDomainListRequest" type="ns1:BmV1GetMsslDomainListRequest" />
+      <xs:element name="BmV1GetMsslDomainListResponse" type="ns1:BmV1GetMsslDomainListResponse" />
+      <xs:element name="BmV1PVOrderWithoutCSRRequest" type="ns1:BmV1PVOrderWithoutCSRRequest" />
+      <xs:element name="BmV1PVOrderWithoutCSRResponse" type="ns1:BmV1PVOrderWithoutCSRResponse" />
+      <xs:element name="BmV1RenewalDomainRequest" type="ns1:BmV1RenewalDomainRequest" />
+      <xs:element name="BmV1RenewalDomainResponse" type="ns1:BmV1RenewalDomainResponse" />
+      <xs:element name="BmV1VerifyMsslDomainRequest" type="ns1:BmV1VerifyMsslDomainRequest" />
+      <xs:element name="BmV1VerifyMsslDomainResponse" type="ns1:BmV1VerifyMsslDomainResponse" />
+      <xs:element name="BusinessEVInfo" type="ns1:BusinessEVInfo" />
+      <xs:element name="ChangeSubjectAltName" type="tns:ChangeSubjectAltName" />
+      <xs:element name="ChangeSubjectAltNameResponse" type="tns:ChangeSubjectAltNameResponse" />
+      <xs:element name="GetDomainApproverList" type="tns:GetDomainApproverList" />
+      <xs:element name="GetDomainApproverListResponse" type="tns:GetDomainApproverListResponse" />
+      <xs:element name="GetDomains" type="tns:GetDomains" />
+      <xs:element name="GetDomainsResponse" type="tns:GetDomainsResponse" />
+      <xs:element name="GetMSSLDomains" type="tns:GetMSSLDomains" />
+      <xs:element name="GetMSSLDomainsResponse" type="tns:GetMSSLDomainsResponse" />
+      <xs:element name="GetMSSLProfiles" type="tns:GetMSSLProfiles" />
+      <xs:element name="GetMSSLProfilesResponse" type="tns:GetMSSLProfilesResponse" />
+      <xs:element name="MSSLEVProfile" type="tns:MsslEvProfile" />
+      <xs:element name="MSSLEVProfileInfo" type="tns:MsslEvProfileInfo" />
+      <xs:element name="MSSLOVProfile" type="tns:MsslOvProfile" />
+      <xs:element name="MSSLOVProfileInfo" type="tns:MsslOvProfileInfo" />
+      <xs:element name="ModifyMSSLDomain" type="tns:ModifyMSSLDomain" />
+      <xs:element name="ModifyMSSLDomainResponse" type="tns:ModifyMSSLDomainResponse" />
+      <xs:element name="ModifyMSSLOrder" type="tns:ModifyMSSLOrder" />
+      <xs:element name="ModifyMSSLOrderResponse" type="tns:ModifyMSSLOrderResponse" />
+      <xs:element name="OrderDetail" type="tns:BmOrderDetail" />
+      <xs:element name="PVOrder" type="tns:PVOrder" />
+      <xs:element name="PVOrderResponse" type="tns:PVOrderResponse" />
+      <xs:element name="PVOrderWithoutCSR" type="tns:PVOrderWithoutCSR" />
+      <xs:element name="PVOrderWithoutCSRResponse" type="tns:PVOrderWithoutCSRResponse" />
+      <xs:element name="RenewalDomain" type="tns:RenewalDomain" />
+      <xs:element name="RenewalDomainResponse" type="tns:RenewalDomainResponse" />
+      <xs:element name="SearchMsslProfileDetails" type="tns:SearchMsslProfileDetails" />
+      <xs:element name="UpdateMSSLProfile" type="tns:UpdateMSSLProfile" />
+      <xs:element name="UpdateMSSLProfileResponse" type="tns:UpdateMSSLProfileResponse" />
+      <xs:element name="VerifyMsslDomain" type="tns:VerifyMsslDomain" />
+      <xs:element name="VerifyMsslDomainResponse" type="tns:VerifyMsslDomainResponse" />
+      <xs:element name="bmV1AddMSSLProfileResponse" type="ns1:BmV1AddMSSLProfileResponse" />
+      <xs:element name="bmV1GetMsslProfilesRequest" type="ns1:BmV1GetMsslProfilesRequest" />
+      <xs:element name="bmV1GetMsslProfilesResponse" type="ns1:BmV1GetMsslProfilesResponse" />
+      <xs:element name="bmV1ModifyMsslDomainRequest" type="ns1:BmV1ModifyMsslDomainRequest" />
+      <xs:element name="bmV1ModifyMsslDomainResponse" type="ns1:BmV1ModifyMsslDomainResponse" />
+      <xs:element name="bmV1ModifyMsslOrderRequest" type="ns1:BmV1ModifyMsslOrderRequest" />
+      <xs:element name="bmV1ModifyMsslOrderResponse" type="ns1:BmV1ModifyMsslOrderResponse" />
+      <xs:element name="bmV1PvOrderRequest" type="ns1:BmV1PvOrderRequest" />
+      <xs:element name="bmV1PvOrderResponse" type="ns1:BmV1PvOrderResponse" />
+      <xs:element name="bmV1UpdateMsslProfileRequest" type="ns1:BmV1UpdateMsslProfileRequest" />
+      <xs:element name="bmV1UpdateMsslProfileResponse" type="ns1:BmV1UpdateMsslProfileResponse" />
+      <xs:element name="bmV2PvOrderRequest" type="tns:BmV2PvOrderRequest" />
+      <xs:complexType name="VerifyMsslDomain">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1VerifyMsslDomainRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderRequestHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AuthToken" type="tns:AuthToken" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AuthToken">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UserName" type="xs:string" />
+          <xs:element minOccurs="0" name="Password" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="VerifyMsslDomainResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1VerifyMsslDomainResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderResponseHeader">
+        <xs:sequence>
+          <xs:element name="SuccessCode" type="xs:int" />
+          <xs:element minOccurs="0" name="Errors" type="tns:Errors" />
+          <xs:element minOccurs="0" name="Timestamp" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Errors">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Error" type="tns:Error" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Error">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ErrorCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ErrorField" type="xs:string" />
+          <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RenewalDomain">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1RenewalDomainRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RenewalDomainResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1RenewalDomainResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UpdateMSSLProfile">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1UpdateMsslProfileRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="MsslEvProfileInfo">
+        <xs:sequence>
+          <xs:element name="MSSLEVProfile" type="tns:MsslEvProfile" />
+          <xs:element name="JurisdictionInfo" type="tns:JurisdictionInfo" />
+          <xs:element name="BusinessPlaceInfo" type="tns:BusinessPlaceInfo" />
+          <xs:element name="BusinessEVInfo" type="ns1:BusinessEVInfo" />
+          <xs:element name="CertificateApprover" type="tns:CertificateApprover" />
+          <xs:element name="ContractSigner" type="tns:ContractSigner" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="MsslEvProfile">
+        <xs:sequence>
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationUnit" nillable="true" type="xs:string" />
+          <xs:element name="BusinessCategory" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="JurisdictionInfo">
+        <xs:sequence>
+          <xs:element name="JurisdictionCountry" type="xs:string" />
+          <xs:element minOccurs="0" name="JurisdictionState" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="JurisdictionLocality" nillable="true" type="xs:string" />
+          <xs:element name="IncorporationAgencyRegistrationNumber" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BusinessPlaceInfo">
+        <xs:sequence>
+          <xs:element name="StreetAddress1" type="xs:string" />
+          <xs:element minOccurs="0" name="StreetAddress2" nillable="true" type="xs:string" />
+          <xs:element name="City" type="xs:string" />
+          <xs:element name="StateOrProvince" type="xs:string" />
+          <xs:element name="PostalCode" type="xs:string" />
+          <xs:element name="CountryCode" type="xs:string" />
+          <xs:element name="Telephone" type="xs:string" />
+          <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CertificateApprover">
+        <xs:sequence>
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element minOccurs="0" name="JobTitle" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ContractSigner">
+        <xs:sequence>
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element name="Department" type="xs:string" />
+          <xs:element name="FirstName" type="xs:string" />
+          <xs:element name="LastName" type="xs:string" />
+          <xs:element name="JobTitle" type="xs:string" />
+          <xs:element name="Telephone" type="xs:string" />
+          <xs:element name="EmailAddress" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UpdateMSSLProfileResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1UpdateMsslProfileResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PVOrderWithoutCSR">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1PVOrderWithoutCSRRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OrderRequestParameter">
+        <xs:sequence>
+          <xs:element name="ProductCode" type="xs:string" />
+          <xs:element minOccurs="0" name="BaseOption" nillable="true" type="xs:string" />
+          <xs:element name="OrderKind" type="xs:string" />
+          <xs:element name="Licenses" type="xs:string" />
+          <xs:element minOccurs="0" name="Options" nillable="true" type="ns1:Options" />
+          <xs:element name="ValidityPeriod" type="tns:ValidityPeriod" />
+          <xs:element name="CSR" type="xs:string" />
+          <xs:element minOccurs="0" name="RenewalTargetOrderID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TargetCERT" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SpecialInstructions" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Coupon" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Campaign" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ValidityPeriod">
+        <xs:sequence>
+          <xs:element name="Months" type="xs:string" />
+          <xs:element minOccurs="0" name="NotBefore" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NotAfter" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PvSealInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AddressLine1" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="AddressLine2" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="AddressLine3" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Phone" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PVOrderWithoutCSRResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1PVOrderWithoutCSRResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmOrderDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CertificateInfo" nillable="true" type="ns1:CertificateInfo" />
+          <xs:element minOccurs="0" name="Fulfillment" nillable="true" type="ns1:Fulfillment" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CACertificates">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CACertificate" nillable="true" type="tns:CACertificate" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CACertificate">
+        <xs:sequence>
+          <xs:element name="CACertType" type="xs:string" />
+          <xs:element name="CACert" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ModifyMSSLOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1ModifyMsslOrderRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ModifyMSSLOrderResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1ModifyMsslOrderResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetMSSLProfiles">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1GetMsslProfilesRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QueryRequestHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AuthToken" type="tns:AuthToken" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetMSSLProfilesResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1GetMsslProfilesResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="QueryResponseHeader">
+        <xs:sequence>
+          <xs:element name="SuccessCode" type="xs:int" />
+          <xs:element minOccurs="0" name="Errors" type="tns:Errors" />
+          <xs:element minOccurs="0" name="Timestamp" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchMsslProfileDetails">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="SearchMsslProfileDetail" type="tns:SearchMsslProfileDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchMsslProfileDetail">
+        <xs:sequence>
+          <xs:element name="MSSLProfileId" type="xs:string" />
+          <xs:element name="VettingLevel" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLPlofileStatus" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DocSubmissionDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PVRecieveDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="HoldEndDate" nillable="true" type="xs:string" />
+          <xs:element name="RequestDate" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLOVProfileInfo" nillable="true" type="tns:MsslOvProfileInfo" />
+          <xs:element minOccurs="0" name="MSSLEVProfileInfo" nillable="true" type="tns:MsslEvProfileInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="MsslOvProfileInfo">
+        <xs:sequence>
+          <xs:element name="MSSLOVProfile" type="tns:MsslOvProfile" />
+          <xs:element name="OVSealInfo" type="tns:OVSealInfo" />
+          <xs:element name="BusinessOVInfo" type="ns1:BusinessOVInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="MsslOvProfile">
+        <xs:sequence>
+          <xs:element name="Country" type="xs:string" />
+          <xs:element name="StateOrProvince" type="xs:string" />
+          <xs:element name="Locality" type="xs:string" />
+          <xs:element name="OrganizationName" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationUnit" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="OVSealInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="StreetAddress1" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="StreetAddress2" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OtherAddressInfo" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Telephone" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetDomainApproverList">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1GetDomainApproverListRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetDomainApproverListResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1GetDomainApproverListResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Approvers">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="SearchOrderDetail" type="tns:Approver" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Approver">
+        <xs:sequence>
+          <xs:element name="ApproverType" type="xs:string" />
+          <xs:element name="ApproverEmail" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddMSSLDomain">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1AddMsslDomainRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddMSSLDomainResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1AddMsslDomainResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetDomains">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1GetDomainsRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LastUpdateDateRange">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="EndDate" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ExpirationDateRange">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="EndDate" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetDomainsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1GetDomainsResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetDomainsDomainDetails">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="DomainDetail" type="tns:GetDomainsDomainDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetDomainsDomainDetail">
+        <xs:sequence>
+          <xs:element name="MSSLProfileID" type="xs:string" />
+          <xs:element name="DomainID" type="xs:string" />
+          <xs:element name="OrderDate" type="xs:string" />
+          <xs:element name="DomainName" type="xs:string" />
+          <xs:element name="DomainStatus" type="xs:string" />
+          <xs:element name="VettingLevel" type="xs:string" />
+          <xs:element name="VettingType" type="xs:string" />
+          <xs:element minOccurs="0" name="DomainValidationCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ValidationDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ExpirationDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ContactInfo" nillable="true" type="ns1:ContactInfoDomain" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddMSSLProfile">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmAddMSSLProfileRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddMSSLProfileResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1AddMSSLProfileResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ModifyMSSLDomain">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1ModifyMsslDomainRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ModifyMSSLDomainResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1ModifyMsslDomainResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddDomainToProfile">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1AddDomainToProfileRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddDomainToProfileResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1AddDomainToProfileResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetMSSLDomains">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1GetMsslDomainListRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GetMSSLDomainsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1GetMsslDomainListResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchMsslDomainDetails">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="SearchMsslDomainDetail" type="tns:SearchMsslDomainDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchMsslDomainDetail">
+        <xs:sequence>
+          <xs:element name="MSSLDomainID" type="xs:string" />
+          <xs:element name="MSSLProfileID" type="xs:string" />
+          <xs:element name="MSSLDomainName" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLDomainStatus" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NotBefore" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NotAfter" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Delete_Date" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ChangeSubjectAltName">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="ns1:BmV1ChangeSubjectAltNameRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ChangeSubjectAltNameResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1ChangeSubjectAltNameResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PVOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Request" type="tns:BmV2PvOrderRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV2PvOrderRequest">
+        <xs:complexContent mixed="false">
+          <xs:extension base="ns1:BmV1PvOrderRequest">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="CertificateTemplate" type="tns:CertificateTemplate" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="CertificateTemplate">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Template" type="xs:string" />
+          <xs:element minOccurs="0" name="MajorVersion" type="xs:string" />
+          <xs:element minOccurs="0" name="MinorVersion" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PVOrderResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Response" type="ns1:BmV1PvOrderResponse" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns:tns="https://system.globalsign.com/kb/ws/v1/" xmlns:ns1="https://system.globalsign.com/kb/ws/v2/" xmlns:ns2="https://system.globalsign.com/kb/ws/" targetNamespace="https://system.globalsign.com/kb/ws/v1/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="https://system.globalsign.com/kb/ws/v2/" />
+      <xs:import namespace="https://system.globalsign.com/kb/ws/" />
+      <xs:complexType name="BmV1VerifyMsslDomainRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="DomainID" type="xs:string" />
+          <xs:element name="TagLocation" type="xs:string" />
+          <xs:element name="VettingType" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1VerifyMsslDomainResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="DomainID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1RenewalDomainRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="MSSLProfileID" type="xs:string" />
+          <xs:element name="VettingLevel" type="xs:string" />
+          <xs:element name="VettingType" type="xs:string" />
+          <xs:element minOccurs="0" name="ApproverEmail" nillable="true" type="xs:string" />
+          <xs:element name="DomainID" type="xs:string" />
+          <xs:element name="ContactInfo" type="tns:ContactInfoDomain" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ContactInfoDomain">
+        <xs:sequence>
+          <xs:element name="FirstName" type="xs:string" />
+          <xs:element name="FirstNameNative" type="xs:string" />
+          <xs:element name="LastName" type="xs:string" />
+          <xs:element name="LastNameNative" type="xs:string" />
+          <xs:element name="Phone" type="xs:string" />
+          <xs:element name="Email" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1RenewalDomainResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="MSSLDomainID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MetaTag" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DnsTXT" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1UpdateMsslProfileRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="MSSLProfileID" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLEVProfileInfo" nillable="true" type="ns1:MsslEvProfileInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BusinessEVInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BusinessAssumedName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CreditAgency" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationCode" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1UpdateMsslProfileResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="MSSLProfileID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1PVOrderWithoutCSRRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="OrderRequestParameterWithoutCSR" type="ns2:OrderRequestParameterWithoutCSR" />
+          <xs:element minOccurs="0" name="SubID" nillable="true" type="xs:string" />
+          <xs:element name="MSSLProfileID" type="xs:string" />
+          <xs:element name="MSSLDomainID" type="xs:string" />
+          <xs:element minOccurs="0" name="PVSealInfo" nillable="true" type="ns1:PvSealInfo" />
+          <xs:element name="OVCSRInfo" type="tns:BmOVCSRInfo" />
+          <xs:element name="ContactInfo" type="tns:ContactInfo" />
+          <xs:element minOccurs="0" name="SANEntries" nillable="true" type="tns:SANEntries" />
+          <xs:element minOccurs="0" name="Extensions" nillable="true" type="tns:Extensions" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Options">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Option" nillable="true" type="tns:Option" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Option">
+        <xs:sequence>
+          <xs:element name="OptionName" type="xs:string" />
+          <xs:element name="OptionValue" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmOVCSRInfo">
+        <xs:sequence>
+          <xs:element name="CommonName" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationUnit" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ContactInfo">
+        <xs:sequence>
+          <xs:element name="FirstName" type="xs:string" />
+          <xs:element name="LastName" type="xs:string" />
+          <xs:element name="Phone" type="xs:string" />
+          <xs:element name="Email" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SANEntries">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SANEntry" nillable="true" type="tns:SANEntry" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SANEntry">
+        <xs:sequence>
+          <xs:element name="SANOptionType" type="xs:string" />
+          <xs:element name="SubjectAltName" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Extensions">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" nillable="true" type="tns:Extension" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Extension">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" />
+          <xs:element name="Value" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1PVOrderWithoutCSRResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="OrderId" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PVOrderDetail" nillable="true" type="ns1:BmOrderDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CertificateInfo">
+        <xs:sequence>
+          <xs:element name="CertificateStatus" type="xs:string" />
+          <xs:element name="StartDate" type="xs:string" />
+          <xs:element name="EndDate" type="xs:string" />
+          <xs:element name="CommonName" type="xs:string" />
+          <xs:element name="SerialNumber" type="xs:string" />
+          <xs:element name="SubjectName" type="xs:string" />
+          <xs:element minOccurs="0" name="DNSNames" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Fulfillment">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CACertificates" nillable="true" type="ns1:CACertificates" />
+          <xs:element minOccurs="0" name="ServerCertificate" nillable="true" type="tns:ServerCertificate" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ServerCertificate">
+        <xs:sequence>
+          <xs:element name="X509Cert" type="xs:string" />
+          <xs:element name="PKCS7Cert" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1ModifyMsslOrderRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="OrderID" type="xs:string" />
+          <xs:element name="ModifyOrderOperation" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1ModifyMsslOrderResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetMsslProfilesRequest">
+        <xs:sequence>
+          <xs:element name="QueryRequestHeader" type="ns1:QueryRequestHeader" />
+          <xs:element minOccurs="0" name="MSSLProfileID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="VettingLevel" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLProfileStatus" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetMsslProfilesResponse">
+        <xs:sequence>
+          <xs:element name="QueryResponseHeader" type="ns1:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="SearchMSSLProfileDetails" nillable="true" type="ns1:SearchMsslProfileDetails" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BusinessOVInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CreditAgency" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrganizationCode" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetDomainApproverListRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="QueryRequestHeader" type="ns1:QueryRequestHeader" />
+          <xs:element name="FQDN" type="xs:string" />
+          <xs:element minOccurs="0" name="ProfileID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetDomainApproverListResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="QueryResponseHeader" type="ns1:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="Approvers" nillable="true" type="ns1:Approvers" />
+          <xs:element minOccurs="0" name="MSSLDomainID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1AddMsslDomainRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="MSSLProfileID" type="xs:string" />
+          <xs:element name="DomainName" type="xs:string" />
+          <xs:element name="VettingLevel" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1AddMsslDomainResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="MSSLDomainID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetDomainsRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="QueryRequestHeader" type="ns1:QueryRequestHeader" />
+          <xs:element minOccurs="0" name="ProfileID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DomainName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DomainStatus" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="VettingLevel" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="LastUpdateDateRange" nillable="true" type="ns1:LastUpdateDateRange" />
+          <xs:element minOccurs="0" name="ExpirationDateRange" nillable="true" type="ns1:ExpirationDateRange" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetDomainsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="QueryResponseHeader" type="ns1:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="DomainDetails" type="ns1:GetDomainsDomainDetails" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmAddMSSLProfileRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="VettingLevel" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLOVProfileInfo" nillable="true" type="ns1:MsslOvProfileInfo" />
+          <xs:element minOccurs="0" name="MSSLEVProfileInfo" nillable="true" type="ns1:MsslEvProfileInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1AddMSSLProfileResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="MsslProfileID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1ModifyMsslDomainRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="MSSLDomainID" type="xs:string" />
+          <xs:element name="ModifyDomainOperation" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1ModifyMsslDomainResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1AddDomainToProfileRequest">
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:BmV1AddMsslDomainRequest">
+            <xs:sequence>
+              <xs:element name="VettingType" type="xs:string" />
+              <xs:element name="DomainID" type="xs:string" />
+              <xs:element name="ApproverEmail" type="xs:string" />
+              <xs:element name="ContactInfo" type="tns:ContactInfoDomain" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="BmV1AddDomainToProfileResponse">
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:BmV1AddMsslDomainResponse">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="MetaTag" nillable="true" type="xs:string" />
+              <xs:element minOccurs="0" name="DnsTXT" nillable="true" type="xs:string" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetMsslDomainListRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="QueryRequestHeader" type="ns1:QueryRequestHeader" />
+          <xs:element minOccurs="0" name="MSSLProfileID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLDomainID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLDomainName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MSSLDomainStatus" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1GetMsslDomainListResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="QueryResponseHeader" type="ns1:QueryResponseHeader" />
+          <xs:element minOccurs="0" name="SearchMsslDomainDetails" nillable="true" type="ns1:SearchMsslDomainDetails" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1ChangeSubjectAltNameRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element minOccurs="0" name="OrderID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TargetOrderID" type="xs:string" />
+          <xs:element minOccurs="0" name="ApproverEmail" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SANEntries" nillable="true" type="tns:SANEntries" />
+          <xs:element minOccurs="0" name="PIN" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1ChangeSubjectAltNameResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OrderResponseHeader" nillable="true" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="OrderID" type="xs:string" />
+          <xs:element minOccurs="0" name="TargetOrderID" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1PvOrderRequest">
+        <xs:sequence>
+          <xs:element name="OrderRequestHeader" type="ns1:OrderRequestHeader" />
+          <xs:element name="OrderRequestParameter" type="ns1:OrderRequestParameter" />
+          <xs:element name="MSSLProfileID" type="xs:string" />
+          <xs:element name="MSSLDomainID" type="xs:string" />
+          <xs:element minOccurs="0" name="SubID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PVSealInfo" nillable="true" type="ns1:PvSealInfo" />
+          <xs:element name="ContactInfo" type="tns:ContactInfo" />
+          <xs:element minOccurs="0" name="SANEntries" nillable="true" type="tns:SANEntries" />
+          <xs:element minOccurs="0" name="Extensions" nillable="true" type="tns:Extensions" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BmV1PvOrderResponse">
+        <xs:sequence>
+          <xs:element name="OrderResponseHeader" type="ns1:OrderResponseHeader" />
+          <xs:element minOccurs="0" name="OrderID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PVOrderDetail" nillable="true" type="ns1:BmOrderDetail" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns:ns1="https://system.globalsign.com/kb/ws/v2/" targetNamespace="https://system.globalsign.com/kb/ws/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="https://system.globalsign.com/kb/ws/v2/" />
+      <xs:complexType name="OrderRequestParameterWithoutCSR">
+        <xs:complexContent mixed="false">
+          <xs:extension base="ns1:OrderRequestParameter">
+            <xs:sequence>
+              <xs:element name="Pin" type="xs:string" />
+              <xs:element name="KeyLength" type="xs:string" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="VerifyMsslDomain">
+    <wsdl:part name="parameters" element="tns:VerifyMsslDomain" />
+  </wsdl:message>
+  <wsdl:message name="AddMSSLProfileResponse">
+    <wsdl:part name="parameters" element="tns:AddMSSLProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="VerifyMsslDomainResponse">
+    <wsdl:part name="parameters" element="tns:VerifyMsslDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateMSSLProfile">
+    <wsdl:part name="parameters" element="tns:UpdateMSSLProfile" />
+  </wsdl:message>
+  <wsdl:message name="ModifyMSSLOrderResponse">
+    <wsdl:part name="parameters" element="tns:ModifyMSSLOrderResponse" />
+  </wsdl:message>
+  <wsdl:message name="PVOrderWithoutCSR">
+    <wsdl:part name="parameters" element="tns:PVOrderWithoutCSR" />
+  </wsdl:message>
+  <wsdl:message name="ModifyMSSLOrder">
+    <wsdl:part name="parameters" element="tns:ModifyMSSLOrder" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainsResponse">
+    <wsdl:part name="parameters" element="tns:GetDomainsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMSSLProfiles">
+    <wsdl:part name="parameters" element="tns:GetMSSLProfiles" />
+  </wsdl:message>
+  <wsdl:message name="GetMSSLDomainsResponse">
+    <wsdl:part name="parameters" element="tns:GetMSSLDomainsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddDomainToProfileResponse">
+    <wsdl:part name="parameters" element="tns:AddDomainToProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDomains">
+    <wsdl:part name="parameters" element="tns:GetDomains" />
+  </wsdl:message>
+  <wsdl:message name="PVOrderResponse">
+    <wsdl:part name="parameters" element="tns:PVOrderResponse" />
+  </wsdl:message>
+  <wsdl:message name="PVOrderWithoutCSRResponse">
+    <wsdl:part name="parameters" element="tns:PVOrderWithoutCSRResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMSSLProfilesResponse">
+    <wsdl:part name="parameters" element="tns:GetMSSLProfilesResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateMSSLProfileResponse">
+    <wsdl:part name="parameters" element="tns:UpdateMSSLProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddDomainToProfile">
+    <wsdl:part name="parameters" element="tns:AddDomainToProfile" />
+  </wsdl:message>
+  <wsdl:message name="GetMSSLDomains">
+    <wsdl:part name="parameters" element="tns:GetMSSLDomains" />
+  </wsdl:message>
+  <wsdl:message name="ChangeSubjectAltName">
+    <wsdl:part name="parameters" element="tns:ChangeSubjectAltName" />
+  </wsdl:message>
+  <wsdl:message name="PVOrder">
+    <wsdl:part name="parameters" element="tns:PVOrder" />
+  </wsdl:message>
+  <wsdl:message name="ModifyMSSLDomainResponse">
+    <wsdl:part name="parameters" element="tns:ModifyMSSLDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="RenewalDomain">
+    <wsdl:part name="parameters" element="tns:RenewalDomain" />
+  </wsdl:message>
+  <wsdl:message name="ChangeSubjectAltNameResponse">
+    <wsdl:part name="parameters" element="tns:ChangeSubjectAltNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainApproverList">
+    <wsdl:part name="parameters" element="tns:GetDomainApproverList" />
+  </wsdl:message>
+  <wsdl:message name="AddMSSLDomain">
+    <wsdl:part name="parameters" element="tns:AddMSSLDomain" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainApproverListResponse">
+    <wsdl:part name="parameters" element="tns:GetDomainApproverListResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddMSSLDomainResponse">
+    <wsdl:part name="parameters" element="tns:AddMSSLDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="RenewalDomainResponse">
+    <wsdl:part name="parameters" element="tns:RenewalDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddMSSLProfile">
+    <wsdl:part name="parameters" element="tns:AddMSSLProfile" />
+  </wsdl:message>
+  <wsdl:message name="ModifyMSSLDomain">
+    <wsdl:part name="parameters" element="tns:ModifyMSSLDomain" />
+  </wsdl:message>
+  <wsdl:portType name="ManagedSSLV2">
+    <wsdl:operation name="VerifyMsslDomain">
+      <wsdl:input name="VerifyMsslDomain" message="tns:VerifyMsslDomain" />
+      <wsdl:output name="VerifyMsslDomainResponse" message="tns:VerifyMsslDomainResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RenewalDomain">
+      <wsdl:input name="RenewalDomain" message="tns:RenewalDomain" />
+      <wsdl:output name="RenewalDomainResponse" message="tns:RenewalDomainResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMSSLProfile">
+      <wsdl:input name="UpdateMSSLProfile" message="tns:UpdateMSSLProfile" />
+      <wsdl:output name="UpdateMSSLProfileResponse" message="tns:UpdateMSSLProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="PVOrderWithoutCSR">
+      <wsdl:input name="PVOrderWithoutCSR" message="tns:PVOrderWithoutCSR" />
+      <wsdl:output name="PVOrderWithoutCSRResponse" message="tns:PVOrderWithoutCSRResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ModifyMSSLOrder">
+      <wsdl:input name="ModifyMSSLOrder" message="tns:ModifyMSSLOrder" />
+      <wsdl:output name="ModifyMSSLOrderResponse" message="tns:ModifyMSSLOrderResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMSSLProfiles">
+      <wsdl:input name="GetMSSLProfiles" message="tns:GetMSSLProfiles" />
+      <wsdl:output name="GetMSSLProfilesResponse" message="tns:GetMSSLProfilesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainApproverList">
+      <wsdl:input name="GetDomainApproverList" message="tns:GetDomainApproverList" />
+      <wsdl:output name="GetDomainApproverListResponse" message="tns:GetDomainApproverListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddMSSLDomain">
+      <wsdl:input name="AddMSSLDomain" message="tns:AddMSSLDomain" />
+      <wsdl:output name="AddMSSLDomainResponse" message="tns:AddMSSLDomainResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDomains">
+      <wsdl:input name="GetDomains" message="tns:GetDomains" />
+      <wsdl:output name="GetDomainsResponse" message="tns:GetDomainsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddMSSLProfile">
+      <wsdl:input name="AddMSSLProfile" message="tns:AddMSSLProfile" />
+      <wsdl:output name="AddMSSLProfileResponse" message="tns:AddMSSLProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ModifyMSSLDomain">
+      <wsdl:input name="ModifyMSSLDomain" message="tns:ModifyMSSLDomain" />
+      <wsdl:output name="ModifyMSSLDomainResponse" message="tns:ModifyMSSLDomainResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddDomainToProfile">
+      <wsdl:input name="AddDomainToProfile" message="tns:AddDomainToProfile" />
+      <wsdl:output name="AddDomainToProfileResponse" message="tns:AddDomainToProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMSSLDomains">
+      <wsdl:input name="GetMSSLDomains" message="tns:GetMSSLDomains" />
+      <wsdl:output name="GetMSSLDomainsResponse" message="tns:GetMSSLDomainsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeSubjectAltName">
+      <wsdl:input name="ChangeSubjectAltName" message="tns:ChangeSubjectAltName" />
+      <wsdl:output name="ChangeSubjectAltNameResponse" message="tns:ChangeSubjectAltNameResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="PVOrder">
+      <wsdl:input name="PVOrder" message="tns:PVOrder" />
+      <wsdl:output name="PVOrderResponse" message="tns:PVOrderResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ManagedSSLServiceSoapBinding" type="tns:ManagedSSLV2">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="VerifyMsslDomain">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="VerifyMsslDomain">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="VerifyMsslDomainResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMSSLProfile">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="UpdateMSSLProfile">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="UpdateMSSLProfileResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RenewalDomain">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="RenewalDomain">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="RenewalDomainResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PVOrderWithoutCSR">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="PVOrderWithoutCSR">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="PVOrderWithoutCSRResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyMSSLOrder">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="ModifyMSSLOrder">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ModifyMSSLOrderResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainApproverList">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetDomainApproverList">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetDomainApproverListResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMSSLProfiles">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetMSSLProfiles">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetMSSLProfilesResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMSSLDomain">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="AddMSSLDomain">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="AddMSSLDomainResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomains">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetDomains">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetDomainsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMSSLProfile">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="AddMSSLProfile">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="AddMSSLProfileResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyMSSLDomain">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="ModifyMSSLDomain">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ModifyMSSLDomainResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDomainToProfile">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="AddDomainToProfile">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="AddDomainToProfileResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMSSLDomains">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="GetMSSLDomains">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetMSSLDomainsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeSubjectAltName">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="ChangeSubjectAltName">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ChangeSubjectAltNameResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PVOrder">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="PVOrder">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="PVOrderResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ManagedSSLService">
+    <wsdl:port name="ManagedSSLV2Port" binding="tns:ManagedSSLServiceSoapBinding">
+      <soap:address location="https://system.globalsign.com/kb/ws/v2/ManagedSSLService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
