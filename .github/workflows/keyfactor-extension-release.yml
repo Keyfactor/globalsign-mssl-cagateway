@@ -78,15 +78,15 @@ jobs:
       #update version number of AssemblyInfo.cs file
       - name: Increment Assembly Version
         run: |
-            $VersionRegex = "\d+\.\d+\.\d+"
-            $assemlyFilePath = (Get-ChildItem -Include AssemblyInfo.cs -File -Recurse).fullname
-            $newVer = "${{ steps.create_release.outputs.current_tag }}".TrimStart('v')
-            foreach($currentFile in $assemblyFilePath)
-            {
-                $filecontent = Get-Content($currentFile)
-                attrib $currentFile -r
-                $filecontent -replace $VersionRegex, $newVer | Out-File $currentFile
-            }
+              $VersionRegex = "\d+\.\d+\.\d+"
+              $assemblyFilePath = (Get-ChildItem -Include AssemblyInfo.cs -File -Recurse).fullname
+              $newVer = "v1.0.2".TrimStart('v')
+              foreach($currentFile in $assemblyFilePath)
+              {
+                  $filecontent = Get-Content($currentFile)
+                  attrib $currentFile -r
+                  $filecontent -replace $VersionRegex, $newVer | Out-File $currentFile
+              }
       
       - name: Execute MSBuild Commands
         run: |
