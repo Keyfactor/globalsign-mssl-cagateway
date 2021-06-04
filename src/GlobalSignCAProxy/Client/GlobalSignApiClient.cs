@@ -1,4 +1,10 @@
-﻿using CAProxy.AnyGateway.Models;
+﻿// Copyright 2021 Keyfactor
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+// and limitations under the License.
+using CAProxy.AnyGateway.Models;
 using CAProxy.Common;
 using CSS.Common.Logging;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Api;
@@ -105,21 +111,20 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
                 var response = service.GetOrderByOrderID(request);
                 if (response.OrderResponseHeader.SuccessCode == 0)
                 {
-                    //var revokationEvents = response.OrderDetail.ModificationEvents.ToList().Where(m => m.ModificationEventName.Equals("CERT_REVOKE") || m.ModificationEventName.Equals("CERT_CA_REVOKE"));
                     GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), response.OrderDetail.CertificateInfo.CertificateStatus);
 
                     Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
                     return new CAConnectorCertificate()
                     {
                         CARequestID = caRequestID,
-                        ProductID = response.OrderDetail.OrderInfo.ProductCode,
-                        SubmissionDate = DateTime.Parse(response.OrderDetail.OrderInfo.OrderDate),
-                        ResolutionDate = DateTime.Parse(response.OrderDetail.OrderInfo.OrderCompleteDate),
+                        ProductID = response.OrderDetail?.OrderInfo?.ProductCode,
+                        SubmissionDate = DateTime.Parse(response.OrderDetail?.OrderInfo?.OrderDate),
+                        ResolutionDate = DateTime.Parse(response.OrderDetail?.OrderInfo?.OrderCompleteDate),
                         Status = (int)orderStatus,
-                        CSR = response.OrderDetail.Fulfillment.OriginalCSR,
-                        Certificate = response.OrderDetail.Fulfillment.ServerCertificate.X509Cert,
+                        CSR = response.OrderDetail?.Fulfillment?.OriginalCSR,
+                        Certificate = response.OrderDetail?.Fulfillment?.ServerCertificate?.X509Cert,
                         RevocationReason = 0,
-                        RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? DateTime.Parse(response.OrderDetail.OrderInfo.OrderDeactivatedDate) : new DateTime?()
+                        RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? DateTime.Parse(response.OrderDetail?.OrderInfo?.OrderDeactivatedDate) : new DateTime?()
                     };
                 }
                 else
