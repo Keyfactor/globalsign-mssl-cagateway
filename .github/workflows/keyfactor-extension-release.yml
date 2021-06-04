@@ -80,7 +80,7 @@ jobs:
         run: |
               $VersionRegex = "\d+\.\d+\.\d+"
               $assemblyFilePath = (Get-ChildItem -Include AssemblyInfo.cs -File -Recurse).fullname
-              $newVer = "v1.0.2".TrimStart('v')
+              $newVer = "${{ steps.create_release.outputs.current_tag }}".TrimStart('v')
               foreach($currentFile in $assemblyFilePath)
               {
                   $filecontent = Get-Content($currentFile)
