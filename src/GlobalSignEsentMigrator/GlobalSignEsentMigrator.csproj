@@ -7,7 +7,7 @@
     <ProjectGuid>{1614CAC6-6CB6-4BCF-A758-186FD53ACF42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GlobalSignEsentMigrator</RootNamespace>
+    <RootNamespace>Keyfactor.Extensions.AnyGateway.Database</RootNamespace>
     <AssemblyName>GlobalSignEsentMigrator</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
