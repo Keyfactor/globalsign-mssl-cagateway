@@ -21,7 +21,7 @@ This AnyGateway plugin uses the contact information of the GCC Domain point of c
 ### Migration
 In the event that a system is being upgraded from the Legacy GlobalSign CA Gateway (19.4 or older), a migration from the legacy database format to the AnyGateway format will be required. 
 
-To begin the migration process, copy the GloabalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory. Afterwardsm, the DatabaseManagementConsole.exe.config will need to be updated to reference the GlobalSignEsentMigrator.  This is one by modifying the mapping for the IDatabaseMigrator inteface in the config file. 
+To begin the migration process, copy the GlobalSignEsentMigrator.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory. Afterwardsm, the DatabaseManagementConsole.exe.config will need to be updated to reference the GlobalSignEsentMigrator.  This is one by modifying the mapping for the IDatabaseMigrator inteface in the config file. 
 ```xml
 <register type="IDatabaseMigrator" mapTo="Keyfactor.AnyGateway.GlobalSign.Database.GlobalSignEsentMigrator, GlobalSignEsentMigrator" />
 ```
