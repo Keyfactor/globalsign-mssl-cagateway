@@ -53,11 +53,9 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
                 //get domain ID for enrollment
                 var commonName = ParseSubject(subject, "CN=");
                 var months = productInfo.ProductParameters["Lifetime"];
-                
-                //parse domain from common name
-                var cnArray = commonName.Split('.');
-                var domainValue = $"{cnArray[cnArray.Length - 2]}.{cnArray[cnArray.Length - 1]}";
-                var domain = apiClient.GetDomains().Where(x => x.DomainName.Equals(domainValue)).FirstOrDefault();
+
+                //get domain
+                var domain = apiClient.GetDomains().Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 
                 var productType = GlobalSignCertType.AllTypes.Where(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                 

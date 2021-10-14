@@ -239,7 +239,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
                             };
                     }
                 }
-                GlobalSignError err = GlobalSignErrorIndex.GetGlobalSignError(int.Parse(response.OrderResponseHeader.Errors[0].ErrorCode));
+                int errorCode = int.Parse(response.OrderResponseHeader.Errors[0].ErrorCode);
+                GlobalSignError err = GlobalSignErrorIndex.GetGlobalSignError(errorCode);
+                if (errorCode <= -101 && errorCode >= -104) // Invalid parameter errors, provide more information
+				{
+                    err.ErrorDetails = string.Format(err.ErrorDetails, response.OrderResponseHeader.Errors[0].ErrorField);
+				}
                 foreach (var e in response.OrderResponseHeader.Errors)
                 {
                     Logger.Error($"{e.ErrorCode}|{e.ErrorField}|{e.ErrorMessage}");
