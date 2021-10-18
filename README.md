@@ -30,13 +30,14 @@ To begin the migration process, copy the GlobalSignEsentMigrator.dll to the Prog
 ## Install
 * Download latest successful build from [GitHub Releases](/releases/latest)
 
-* Copy GloabalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory
+* Copy GlobalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory
 
 * Update the CAProxyServer.config file
-  * Update the CAConnection section to point at the GloabalSignCAProxy class
+  * Update the CAConnection section to point at the GlobalSignCAProxy class
   ```xml
-  <alias alias="CAConnector" type="Keyfactor.Extensions.AnyGateway.GlobalSign.GloabalSignCAProxy, GloabalSignCAProxy"/>
+  <alias alias="CAConnector" type="Keyfactor.Extensions.AnyGateway.GlobalSign.GlobalSignCAProxy, GlobalSignCAProxy"/>
   ```
+  * Restart the Keyfactor AnyGateway service
 
 ## Configuration
 The following sections will breakdown the required configurations for the AnyGatewayConfig.json file that will be imported to configure the AnyGateway.
@@ -46,7 +47,7 @@ The Template section will map the CA's SSL profile to an AD template. The Lifeti
  ```json
   "Templates": {
 	"WebServer": {
-      "ProductID": "PEV",
+      "ProductID": "PV_SHA2",
       "Parameters": {
 		"Lifetime":"12"
       }
@@ -64,7 +65,7 @@ The Template section will map the CA's SSL profile to an AD template. The Lifeti
  
  
 ### Security
-The security section does not change specifically for the Entrust CA Gateway.  Refer to the AnyGateway Documentation for more detail.
+The security section does not change specifically for the GlobalSign CA Gateway.  Refer to the AnyGateway Documentation for more detail.
 ```json
   /*Grant permissions on the CA to users or groups in the local domain.
 	READ: Enumerate and read contents of certificates.
@@ -147,10 +148,10 @@ This is the password that will be used to connect to the GloabalSign API
   },
 ```
 ### GatewayRegistration
-There are no specific Changes for the GatewayRegistration section. Refer to the Refer to the AnyGateway Documentation for more detail.
+There are no specific Changes for the GatewayRegistration section. Refer to the AnyGateway Documentation for more detail.
 ```json
   "GatewayRegistration": {
-    "LogicalName": "GlobalsSignCASandbox",
+    "LogicalName": "GlobalSignCASandbox",
     "GatewayCertificate": {
       "StoreName": "CA",
       "StoreLocation": "LocalMachine",
@@ -160,7 +161,7 @@ There are no specific Changes for the GatewayRegistration section. Refer to the 
 ```
 
 ### ServiceSettings
-There are no specific Changes for the GatewayRegistration section. Refer to the Refer to the AnyGateway Documentation for more detail.
+There are no specific Changes for the ServiceSettings section. Refer to the AnyGateway Documentation for more detail.
 ```json
   "ServiceSettings": {
     "ViewIdleMinutes": 8,
