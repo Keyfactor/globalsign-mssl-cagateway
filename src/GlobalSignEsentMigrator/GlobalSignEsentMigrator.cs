@@ -12,7 +12,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 
-namespace GlobalSignEsentMigrator
+namespace Keyfactor.Extensions.AnyGateway.Database
 {
     public class GlobalSignEsentMigrator : LoggingClientBase, IDatabaseMigrator
     {

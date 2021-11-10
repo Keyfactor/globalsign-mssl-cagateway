@@ -1,52 +1,52 @@
-# {{ name }}
-## {{ integration_type | capitalize }}
+# GlobalSign Managed SSL AnyGateway
+## Ca-gateway
 
-{{ description }}
+This integration allows for the Synchronization, Enrollment, and Revocation of TLS Certificates from the GlobalSign Certificate Center.
 
 *** 
-# Introduction
-This AnyGateway plug-in enables issuance, revocation, and synchronization of certificates from GlobalSign's Managed SSL/TLS offering.  
-# Prerequisites
+## Introduction
+This AnyGateway plug enables issuance, revocation, and synchronization of certificates from GlobalSign's Managed SSL/TLS offering.  
+## Prerequisites
 
-## Certificate Chain
+### Certificate Chain
 
 In order to enroll for certificates the Keyfactor Command server must trust the trust chain. Once you create your Root and/or Subordinate CA, make sure to import the certificate chain into the AnyGateway and Command Server certificate store
 
-## API Allow List
+### API Allow List
 The GlobalSign API can filter requested based on IP address.  Ensure that appropiate IP address is allowed to make requests to the GlobalSign API.
 
-## Domain Point of Contact
+### Domain Point of Contact
 This AnyGateway plugin uses the contact information of the GCC Domain point of contact when enrolling for certificates.  These fields are required to submit and enrollment and must be populated on the Domain's point of contact. This can be found in the GlobalSign Portal in the Manage Domains page. 
 
 ### Migration
 In the event that a system is being upgraded from the Legacy GlobalSign CA Gateway (19.4 or older), a migration from the legacy database format to the AnyGateway format will be required. 
 
-To begin the migration process, copy the GlobalSignEsentMigrator.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory. Afterwards, the DatabaseManagementConsole.exe.config will need to be updated to reference the GlobalSignEsentMigrator.  This is done by modifying the mapping for the IDatabaseMigrator inteface in the config file. 
+To begin the migration process, copy the GlobalSignEsentMigrator.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory. Afterwardsm, the DatabaseManagementConsole.exe.config will need to be updated to reference the GlobalSignEsentMigrator.  This is one by modifying the mapping for the IDatabaseMigrator inteface in the config file. 
 ```xml
 <register type="IDatabaseMigrator" mapTo="Keyfactor.AnyGateway.GlobalSign.Database.GlobalSignEsentMigrator, GlobalSignEsentMigrator" />
 ```
 
 
-# Install
+## Install
 * Download latest successful build from [GitHub Releases](/releases/latest)
 
-* Copy GlobalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory
+* Copy GloabalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory
 
 * Update the CAProxyServer.config file
-  * Update the CAConnection section to point at the GlobalSignCAProxy class
+  * Update the CAConnection section to point at the GloabalSignCAProxy class
   ```xml
-  <alias alias="CAConnector" type="Keyfactor.Extensions.AnyGateway.GlobalSign.GlobalSignCAProxy, GlobalSignCAProxy"/>
+  <alias alias="CAConnector" type="Keyfactor.Extensions.AnyGateway.GlobalSign.GloabalSignCAProxy, GloabalSignCAProxy"/>
   ```
 
-# Configuration
+## Configuration
 The following sections will breakdown the required configurations for the AnyGatewayConfig.json file that will be imported to configure the AnyGateway.
 
-## Templates
+### Templates
 The Template section will map the CA's SSL profile to an AD template. The Lifetime parameter is required and represents the certificate duration in months. 
  ```json
   "Templates": {
 	"WebServer": {
-      "ProductID": "PV_SHA2",
+      "ProductID": "PEV",
       "Parameters": {
 		"Lifetime":"12"
       }
@@ -63,8 +63,8 @@ The Template section will map the CA's SSL profile to an AD template. The Lifeti
  * Cloud SSL SHA 256 ECDSA (PV_CLOUD_ECC2)
  
  
-## Security
-The security section does not change specifically for the GlobalSign CA Gateway.  Refer to the AnyGateway Documentation for more detail.
+### Security
+The security section does not change specifically for the Entrust CA Gateway.  Refer to the AnyGateway Documentation for more detail.
 ```json
   /*Grant permissions on the CA to users or groups in the local domain.
 	READ: Enumerate and read contents of certificates.
@@ -99,7 +99,7 @@ The security section does not change specifically for the GlobalSign CA Gateway.
         }
     }
 ```
-## CerificateManagers
+### CerificateManagers
 The Certificate Managers section is optional.
 	If configured, all users or groups granted OFFICER permissions under the Security section
 	must be configured for at least one Template and one Requester. 
@@ -124,7 +124,7 @@ The Certificate Managers section is optional.
 		}
 	}
 ```
-## CAConnection
+### CAConnection
 The CA Connection section will determine the API endpoint and configuration data used to connect to Entrust CA Gateway. 
 * ```IsTest```
 This determines if the test API endpoints are used with the Gateway.  
@@ -146,11 +146,11 @@ This is the password that will be used to connect to the GloabalSign API
 	"Password":"password"
   },
 ```
-## GatewayRegistration
-There are no specific Changes for the GatewayRegistration section. Refer to the AnyGateway Documentation for more detail.
+### GatewayRegistration
+There are no specific Changes for the GatewayRegistration section. Refer to the Refer to the AnyGateway Documentation for more detail.
 ```json
   "GatewayRegistration": {
-    "LogicalName": "GlobalSignCASandbox",
+    "LogicalName": "GlobalsSignCASandbox",
     "GatewayCertificate": {
       "StoreName": "CA",
       "StoreLocation": "LocalMachine",
@@ -159,8 +159,8 @@ There are no specific Changes for the GatewayRegistration section. Refer to the 
   }
 ```
 
-## ServiceSettings
-There are no specific Changes for the ServiceSettings section. Refer to the AnyGateway Documentation for more detail.
+### ServiceSettings
+There are no specific Changes for the GatewayRegistration section. Refer to the Refer to the AnyGateway Documentation for more detail.
 ```json
   "ServiceSettings": {
     "ViewIdleMinutes": 8,
