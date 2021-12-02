@@ -5,7 +5,11 @@
 
 *** 
 # Introduction
-This AnyGateway plug-in enables issuance, revocation, and synchronization of certificates from GlobalSign's Managed SSL/TLS offering.  
+This AnyGateway plug-in enables issuance, revocation, and synchronization of certificates from GlobalSign's Managed SSL/TLS offering. 
+
+# Compatibility
+This AnyGateway is designed to be used with version 21.3.2 of the Keyfactor AnyGateway Framework
+
 # Prerequisites
 
 ## Certificate Chain
