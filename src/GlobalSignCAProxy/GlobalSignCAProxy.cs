@@ -74,6 +74,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
                         var tempDomain = apiClient.GetDomains().Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                         if (tempDomain != null)
 						{
+                            Logger.Debug($"SAN Domain match found for SAN: {dnsSan}");
                             domain = tempDomain;
                             commonName = dnsSan;
                             break;
@@ -89,6 +90,9 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				{
                     throw new Exception("Unable to determine GlobalSign domain");
 				}
+
+                Logger.Debug($"Domain info:\nDomain Name: {domain?.DomainName}\nMsslDomainId: {domain?.DomainID}\nMsslProfileId: {domain?.MSSLProfileID}");
+                Logger.Debug($"Using common name: {commonName}");
 
                 var months = productInfo.ProductParameters["Lifetime"];
        
