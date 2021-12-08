@@ -53,6 +53,9 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
                     priorSn = productInfo.ProductParameters["priorcertsn"];
                 }
                 //get domain ID for enrollment
+                // First, determine if there is a CN in the subject and, if so, find a domain that matches the end of the CN
+                // If no CN is found, go through the DNS Name SANs in order, and find a domain that maches the end of one of those SANs
+                // If a match is found, set the common name to that SAN (GlobalSign API requires the CommonName field be populated)
                 string commonName = null;
                 DomainDetail domain = null;
                 try
@@ -72,6 +75,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
                         if (tempDomain != null)
 						{
                             domain = tempDomain;
+                            commonName = dnsSan;
                             break;
 						}
 					}
