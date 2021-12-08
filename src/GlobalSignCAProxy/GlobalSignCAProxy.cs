@@ -13,6 +13,8 @@ using CSS.Common.Logging;
 using CSS.PKI;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Api;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Client;
+using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
+
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -51,13 +53,41 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
                     priorSn = productInfo.ProductParameters["priorcertsn"];
                 }
                 //get domain ID for enrollment
-                var commonName = ParseSubject(subject, "CN=");
-                var months = productInfo.ProductParameters["Lifetime"];
+                string commonName = null;
+                DomainDetail domain = null;
+                try
+                {
+                    commonName = ParseSubject(subject, "CN=");
+                }
+                catch
+				{
+                    Logger.Warn("Subject is missing a CN value. Using SAN domain lookup instead");
+				}
+                if (commonName == null)
+				{
+                    var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
+                    foreach (string dnsSan in sanDict["dns"])
+					{
+                        var tempDomain = apiClient.GetDomains().Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                        if (tempDomain != null)
+						{
+                            domain = tempDomain;
+                            break;
+						}
+					}
+				}
+                else
+				{
+                    domain = apiClient.GetDomains().Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                }
 
-                //get domain
-                var domain = apiClient.GetDomains().Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).First();
-                
-                
+                if (domain == null)
+				{
+                    throw new Exception("Unable to determine GlobalSign domain");
+				}
+
+                var months = productInfo.ProductParameters["Lifetime"];
+       
                 var productType = GlobalSignCertType.AllTypes.Where(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                 
                 CAConnectorCertificate priorCert = null;
