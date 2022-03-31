@@ -9,328 +9,344 @@ using CAProxy.AnyGateway.Interfaces;
 using CAProxy.AnyGateway.Models;
 using CAProxy.Common;
 using CAProxy.Common.Config;
+
 using CSS.Common.Logging;
 using CSS.PKI;
+
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Api;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Client;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 
 using Newtonsoft.Json;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-
 namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 {
-    public class GlobalSignCAProxy : BaseCAConnector
-    {
-        private GlobalSignCAConfig Config { get; set; }
-        public override void Initialize(ICAConnectorConfigProvider configProvider)
-        {
-            Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
-            string rawConfig = JsonConvert.SerializeObject(configProvider.CAConnectionData);
-            Config = JsonConvert.DeserializeObject<GlobalSignCAConfig>(rawConfig);
-            Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
-        }
+	public class GlobalSignCAProxy : BaseCAConnector
+	{
+		private GlobalSignCAConfig Config { get; set; }
 
-        public override EnrollmentResult Enroll(ICertificateDataReader certificateDataReader, string csr, string subject, Dictionary<string, string[]> san, EnrollmentProductInfo productInfo, PKIConstants.X509.RequestFormat requestFormat, RequestUtilities.EnrollmentType enrollmentType)
-        {
-            CAProxy.Common.Config.ADUserInfoResolver userInfoResolver = new ADUserInfoResolver();
-            
-            var requestor = productInfo.ProductParameters["Keyfactor-Requester"];
-            var userInfo = userInfoResolver.Resolve(requestor);
+		public override void Initialize(ICAConnectorConfigProvider configProvider)
+		{
+			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
+			string rawConfig = JsonConvert.SerializeObject(configProvider.CAConnectionData);
+			Config = JsonConvert.DeserializeObject<GlobalSignCAConfig>(rawConfig);
+			Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
+		}
 
-            try    
-            {
-                GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
+		public override EnrollmentResult Enroll(ICertificateDataReader certificateDataReader, string csr, string subject, Dictionary<string, string[]> san, EnrollmentProductInfo productInfo, PKIConstants.X509.RequestFormat requestFormat, RequestUtilities.EnrollmentType enrollmentType)
+		{
+			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
+			CAProxy.Common.Config.ADUserInfoResolver userInfoResolver = new ADUserInfoResolver();
 
-                string priorSn = string.Empty;
-                if (productInfo.ProductParameters.ContainsKey("priorcertsn"))
-                {
-                    priorSn = productInfo.ProductParameters["priorcertsn"];
-                }
-                //get domain ID for enrollment
-                // First, determine if there is a CN in the subject and, if so, find a domain that matches the end of the CN
-                // If no CN is found, go through the DNS Name SANs in order, and find a domain that maches the end of one of those SANs
-                // If a match is found, set the common name to that SAN (GlobalSign API requires the CommonName field be populated)
-                string commonName = null;
-                DomainDetail domain = null;
-                try
-                {
-                    commonName = ParseSubject(subject, "CN=");
-                }
-                catch
+			var requestor = productInfo.ProductParameters["Keyfactor-Requester"];
+			Logger.Debug($"Resolving requesting user as '{requestor}'");
+			var userInfo = userInfoResolver.Resolve(requestor);
+
+			try
+			{
+				GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
+				Logger.Debug("Parsing enrollment values:");
+				string priorSn = string.Empty;
+				if (productInfo.ProductParameters.ContainsKey("priorcertsn"))
 				{
-                    Logger.Warn("Subject is missing a CN value. Using SAN domain lookup instead");
+					priorSn = productInfo.ProductParameters["priorcertsn"];
+					Logger.Debug($"Prior cert sn: {priorSn}");
 				}
-                if (commonName == null)
+				//get domain ID for enrollment
+				// First, determine if there is a CN in the subject and, if so, find a domain that matches the end of the CN
+				// If no CN is found, go through the DNS Name SANs in order, and find a domain that maches the end of one of those SANs
+				// If a match is found, set the common name to that SAN (GlobalSign API requires the CommonName field be populated)
+				string commonName = null;
+				DomainDetail domain = null;
+				try
 				{
-                    var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
-                    foreach (string dnsSan in sanDict["dns"])
+					commonName = ParseSubject(subject, "CN=");
+				}
+				catch
+				{
+					Logger.Warn("Subject is missing a CN value. Using SAN domain lookup instead");
+				}
+				if (commonName == null)
+				{
+					var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
+					foreach (string dnsSan in sanDict["dns"])
 					{
-                        var tempDomain = apiClient.GetDomains().Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                        if (tempDomain != null)
+						var tempDomain = apiClient.GetDomains().Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+						if (tempDomain != null)
 						{
-                            Logger.Debug($"SAN Domain match found for SAN: {dnsSan}");
-                            domain = tempDomain;
-                            commonName = dnsSan;
-                            break;
+							Logger.Debug($"SAN Domain match found for SAN: {dnsSan}");
+							domain = tempDomain;
+							commonName = dnsSan;
+							break;
 						}
 					}
 				}
-                else
+				else
 				{
-                    domain = apiClient.GetDomains().Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                }
-
-                if (domain == null)
-				{
-                    throw new Exception("Unable to determine GlobalSign domain");
+					domain = apiClient.GetDomains().Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 				}
 
-                Logger.Debug($"Domain info:\nDomain Name: {domain?.DomainName}\nMsslDomainId: {domain?.DomainID}\nMsslProfileId: {domain?.MSSLProfileID}");
-                Logger.Debug($"Using common name: {commonName}");
+				if (domain == null)
+				{
+					throw new Exception("Unable to determine GlobalSign domain");
+				}
 
-                var months = productInfo.ProductParameters["Lifetime"];
-       
-                var productType = GlobalSignCertType.AllTypes.Where(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-                
-                CAConnectorCertificate priorCert = null;
-                switch (enrollmentType)
-                {
-                    case RequestUtilities.EnrollmentType.New:
-                        
-                        GlobalSignEnrollRequest request = new GlobalSignEnrollRequest(Config)
-                        {
-                            MsslDomainId = domain?.DomainID,
-                            MsslProfileId = domain?.MSSLProfileID,
-                            CSR = csr,
-                            Licenses = "1",
-                            OrderKind = "new",
-                            Months = months,
-                            FirstName = userInfo.Name,
-                            LastName = userInfo.Name,
-                            Email = domain?.ContactInfo?.Email,
-                            Phone = domain?.ContactInfo?.Phone,
-                            CommonName = commonName,
-                            ProductCode = productType.ProductCode,
-                        };
+				Logger.Debug($"Domain info:\nDomain Name: {domain?.DomainName}\nMsslDomainId: {domain?.DomainID}\nMsslProfileId: {domain?.MSSLProfileID}");
+				Logger.Debug($"Using common name: {commonName}");
+				var months = productInfo.ProductParameters["Lifetime"];
+				Logger.Debug($"Using validity: {months} months.");
 
-                        return apiClient.Enroll(request);
+				var productType = GlobalSignCertType.AllTypes.Where(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
-                    case RequestUtilities.EnrollmentType.Renew:
-                        priorCert = certificateDataReader.GetCertificateRecord(CSS.Common.DataConversion.HexToBytes(priorSn));
+				CAConnectorCertificate priorCert = null;
+				switch (enrollmentType)
+				{
+					case RequestUtilities.EnrollmentType.New:
 
-                        GlobalSignRenewRequest renewRequest = new GlobalSignRenewRequest(Config)
-                        {
-                            MsslDomainId = domain?.DomainID,
-                            MsslProfileId = domain?.MSSLProfileID,
-                            CSR = csr,
-                            Licenses = "1",
-                            OrderKind = "renewal",
-                            Months = months,
-                            FirstName = userInfo.Name,
-                            LastName = userInfo.Name,
-                            Email = domain?.ContactInfo?.Email,
-                            Phone = domain?.ContactInfo?.Phone,
-                            CommonName = commonName,
-                            ProductCode = productType.ProductCode,
-                            RenewalTargetOrderId = priorCert.CARequestID
-                        };
+						Logger.Debug($"Issuing new certificate request for product code {productType.ProductCode}");
+						GlobalSignEnrollRequest request = new GlobalSignEnrollRequest(Config)
+						{
+							MsslDomainId = domain?.DomainID,
+							MsslProfileId = domain?.MSSLProfileID,
+							CSR = csr,
+							Licenses = "1",
+							OrderKind = "new",
+							Months = months,
+							FirstName = userInfo.Name,
+							LastName = userInfo.Name,
+							Email = domain?.ContactInfo?.Email,
+							Phone = domain?.ContactInfo?.Phone,
+							CommonName = commonName,
+							ProductCode = productType.ProductCode,
+						};
 
-                        return apiClient.Renew(renewRequest);
-                    case RequestUtilities.EnrollmentType.Reissue:
-                        priorCert = certificateDataReader.GetCertificateRecord(CSS.Common.DataConversion.HexToBytes(priorSn));
+						return apiClient.Enroll(request);
 
-                        GlobalSignReissueRequest reissueRequest = new GlobalSignReissueRequest(Config) 
-                        { 
-                            CSR=csr,
-                            OrderID = priorCert.CARequestID
-                        };
+					case RequestUtilities.EnrollmentType.Renew:
 
-                        return apiClient.Reissue(reissueRequest, priorSn);
-                    default:
-                        return new EnrollmentResult { Status = 30, StatusMessage = $"Unsupported enrollment type {enrollmentType}" };
-                }
-            }
-            catch (UnsuccessfulRequestException uEx)
-            {
-                Logger.Error($"Error enrolling for certificate with subject {subject}");
-                Logger.Error(uEx);
-                return new EnrollmentResult
-                {
-                    StatusMessage = $"{uEx.Message}",
-                    Status = (int)CSS.PKI.PKIConstants.Microsoft.RequestDisposition.FAILED
-                };
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Unhandled exception enrolling for certificate with subject {subject}");
-                Logger.Error(ex);
-                return new EnrollmentResult
-                {
-                    StatusMessage = $"{ex.Message}",
-                    Status = (int)CSS.PKI.PKIConstants.Microsoft.RequestDisposition.FAILED
-                };
-            }
-        }
+						priorCert = certificateDataReader.GetCertificateRecord(CSS.Common.DataConversion.HexToBytes(priorSn));
+						Logger.Debug($"Issuing certificate renewal request for cert with request ID {priorCert.CARequestID} and product code {productType.ProductCode}");
+						GlobalSignRenewRequest renewRequest = new GlobalSignRenewRequest(Config)
+						{
+							MsslDomainId = domain?.DomainID,
+							MsslProfileId = domain?.MSSLProfileID,
+							CSR = csr,
+							Licenses = "1",
+							OrderKind = "renewal",
+							Months = months,
+							FirstName = userInfo.Name,
+							LastName = userInfo.Name,
+							Email = domain?.ContactInfo?.Email,
+							Phone = domain?.ContactInfo?.Phone,
+							CommonName = commonName,
+							ProductCode = productType.ProductCode,
+							RenewalTargetOrderId = priorCert.CARequestID
+						};
 
-        public override void Synchronize(ICertificateDataReader certificateDataReader, BlockingCollection<CAConnectorCertificate> blockingBuffer, CertificateAuthoritySyncInfo certificateAuthoritySyncInfo, CancellationToken cancelToken)
-        {
-            try
-            {
-                GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
+						return apiClient.Renew(renewRequest);
 
-                DateTime? syncFrom = certificateAuthoritySyncInfo.DoFullSync ? new DateTime(2000,01,01) : certificateAuthoritySyncInfo.OverallLastSync;
-                var certs = apiClient.GetCertificatesForSync(certificateAuthoritySyncInfo.DoFullSync, syncFrom);
+					case RequestUtilities.EnrollmentType.Reissue:
+						priorCert = certificateDataReader.GetCertificateRecord(CSS.Common.DataConversion.HexToBytes(priorSn));
+						Logger.Debug($"Issuing certificate reissue request for cert with request ID {priorCert.CARequestID}");
+						GlobalSignReissueRequest reissueRequest = new GlobalSignReissueRequest(Config)
+						{
+							CSR = csr,
+							OrderID = priorCert.CARequestID
+						};
 
-                foreach (var c in certs)
-                {
-                    GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), c.CertificateInfo.CertificateStatus);
-                    var certToAdd = new CAConnectorCertificate()
-                    {
-                        CARequestID = c.OrderInfo?.OrderId,
-                        ProductID = c.OrderInfo?.ProductCode,
-                        SubmissionDate = DateTime.Parse(c.OrderInfo?.OrderDate),
-                        ResolutionDate = DateTime.Parse(c.OrderInfo?.OrderCompleteDate),
-                        Status = (int)orderStatus,
-                        CSR = c.Fulfillment?.OriginalCSR,
-                        Certificate = c.Fulfillment?.ServerCertificate?.X509Cert,
-                        RevocationReason = 0,
-                        RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? DateTime.Parse(c.OrderInfo?.OrderDeactivatedDate) : new DateTime?()
-                    };
+						return apiClient.Reissue(reissueRequest, priorSn);
 
-                    blockingBuffer.Add(certToAdd);
-                }
+					default:
+						return new EnrollmentResult { Status = 30, StatusMessage = $"Unsupported enrollment type {enrollmentType}" };
+				}
+			}
+			catch (UnsuccessfulRequestException uEx)
+			{
+				Logger.Error($"Error enrolling for certificate with subject {subject}");
+				Logger.Error(uEx);
+				return new EnrollmentResult
+				{
+					StatusMessage = $"{uEx.Message}",
+					Status = (int)CSS.PKI.PKIConstants.Microsoft.RequestDisposition.FAILED
+				};
+			}
+			catch (Exception ex)
+			{
+				Logger.Error($"Unhandled exception enrolling for certificate with subject {subject}");
+				Logger.Error(ex);
+				return new EnrollmentResult
+				{
+					StatusMessage = $"{ex.Message}",
+					Status = (int)CSS.PKI.PKIConstants.Microsoft.RequestDisposition.FAILED
+				};
+			}
+		}
 
-                blockingBuffer.CompleteAdding();
-            }
-            catch (UnsuccessfulRequestException uEx)
-            {
-                Logger.Error("Error requesting certificates for sync. Stopping sync process");
-                Logger.Error(uEx);
-                blockingBuffer.CompleteAdding();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Unhandled exception during sync. Stopping sync process");
-                Logger.Error(ex);
-                blockingBuffer.CompleteAdding();
-            }
+		public override void Synchronize(ICertificateDataReader certificateDataReader, BlockingCollection<CAConnectorCertificate> blockingBuffer, CertificateAuthoritySyncInfo certificateAuthoritySyncInfo, CancellationToken cancelToken)
+		{
+			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
+			string syncType = certificateAuthoritySyncInfo.DoFullSync ? "full" : "incremental";
+			Logger.Debug($"Performing {syncType} sync");
+			try
+			{
+				GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
 
-        }
+				DateTime? syncFrom = certificateAuthoritySyncInfo.DoFullSync ? new DateTime(2000, 01, 01) : certificateAuthoritySyncInfo.OverallLastSync;
+				var certs = apiClient.GetCertificatesForSync(certificateAuthoritySyncInfo.DoFullSync, syncFrom);
 
-        public override int Revoke(string caRequestID, string hexSerialNumber, uint revocationReason)
-        {
-            try
-            {
-                GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
-                return apiClient.RevokeCertificateById(caRequestID);
-            }
-            catch (UnsuccessfulRequestException uEx)
-            {
-                Logger.Error($"Error revoking certificate with request id {caRequestID}");
-                Logger.Error(uEx);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Unhandled exception revoking certificate with request id {caRequestID}");
-                Logger.Error(ex);
-                throw;
-            }
-        }
+				foreach (var c in certs)
+				{
+					GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), c.CertificateInfo.CertificateStatus);
+					var certToAdd = new CAConnectorCertificate()
+					{
+						CARequestID = c.OrderInfo?.OrderId,
+						ProductID = c.OrderInfo?.ProductCode,
+						SubmissionDate = DateTime.Parse(c.OrderInfo?.OrderDate),
+						ResolutionDate = DateTime.Parse(c.OrderInfo?.OrderCompleteDate),
+						Status = (int)orderStatus,
+						CSR = c.Fulfillment?.OriginalCSR,
+						Certificate = c.Fulfillment?.ServerCertificate?.X509Cert,
+						RevocationReason = 0,
+						RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? DateTime.Parse(c.OrderInfo?.OrderDeactivatedDate) : new DateTime?()
+					};
+					Logger.Trace($"Syncronization: Adding certificate with request ID {c.OrderInfo?.OrderId} to the results");
+					blockingBuffer.Add(certToAdd);
+				}
 
-        public override CAConnectorCertificate GetSingleRecord(string caRequestID)
-        {
-            Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
-            try
-            {
-                GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
-                return apiClient.GetCertificateById(caRequestID);
-            }
-            catch (UnsuccessfulRequestException uEx)
-            {
-                Logger.Error($"Error requesting certificate detail for caRequestID: {caRequestID}");
-                Logger.Error(uEx);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Unhandled Exception requesting certificate detail for caRequestID: {caRequestID}");
-                Logger.Error(ex);
-                throw;
-            }
-        }
+				blockingBuffer.CompleteAdding();
+			}
+			catch (UnsuccessfulRequestException uEx)
+			{
+				Logger.Error("Error requesting certificates for sync. Stopping sync process");
+				Logger.Error(uEx);
+				blockingBuffer.CompleteAdding();
+			}
+			catch (Exception ex)
+			{
+				Logger.Error("Unhandled exception during sync. Stopping sync process");
+				Logger.Error(ex);
+				blockingBuffer.CompleteAdding();
+			}
+			Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
+		}
 
-        public override void Ping()
-        {
-            Logger.Info("Ping reqeuest recieved");
-        }
+		public override int Revoke(string caRequestID, string hexSerialNumber, uint revocationReason)
+		{
+			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
+			try
+			{
+				GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
+				return apiClient.RevokeCertificateById(caRequestID);
+			}
+			catch (UnsuccessfulRequestException uEx)
+			{
+				Logger.Error($"Error revoking certificate with request id {caRequestID}");
+				Logger.Error(uEx);
+				throw;
+			}
+			catch (Exception ex)
+			{
+				Logger.Error($"Unhandled exception revoking certificate with request id {caRequestID}");
+				Logger.Error(ex);
+				throw;
+			}
+		}
 
-        public override void ValidateCAConnectionInfo(Dictionary<string, object> connectionInfo)
-        {
-            Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
-            string rawConfig = JsonConvert.SerializeObject(connectionInfo);
-            GlobalSignCAConfig validateConfig = JsonConvert.DeserializeObject<GlobalSignCAConfig>(rawConfig);
+		public override CAConnectorCertificate GetSingleRecord(string caRequestID)
+		{
+			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
+			try
+			{
+				GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
+				return apiClient.GetCertificateById(caRequestID);
+			}
+			catch (UnsuccessfulRequestException uEx)
+			{
+				Logger.Error($"Error requesting certificate detail for caRequestID: {caRequestID}");
+				Logger.Error(uEx);
+				throw;
+			}
+			catch (Exception ex)
+			{
+				Logger.Error($"Unhandled Exception requesting certificate detail for caRequestID: {caRequestID}");
+				Logger.Error(ex);
+				throw;
+			}
+		}
 
-            var apiClient = new GlobalSignApiClient(validateConfig);
-            apiClient.GetDomains().ForEach(x => Logger.Info($"Connection established for {x.DomainName}"));
-            Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
+		public override void Ping()
+		{
+			Logger.Info("Ping reqeuest recieved");
+		}
 
-        }
+		public override void ValidateCAConnectionInfo(Dictionary<string, object> connectionInfo)
+		{
+			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
+			string rawConfig = JsonConvert.SerializeObject(connectionInfo);
+			GlobalSignCAConfig validateConfig = JsonConvert.DeserializeObject<GlobalSignCAConfig>(rawConfig);
 
-        public override void ValidateProductInfo(EnrollmentProductInfo productInfo, Dictionary<string, object> connectionInfo)
-        {
-            var certType = GlobalSignCertType.AllTypes.Find(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase));
+			var apiClient = new GlobalSignApiClient(validateConfig);
+			apiClient.GetDomains().ForEach(x => Logger.Info($"Connection established for {x.DomainName}"));
+			Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
+		}
 
-            if (certType == null)
-            {
-                throw new ArgumentException($"Cannot find {productInfo.ProductID}", "ProductId");
-            }
+		public override void ValidateProductInfo(EnrollmentProductInfo productInfo, Dictionary<string, object> connectionInfo)
+		{
+			var certType = GlobalSignCertType.AllTypes.Find(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase));
 
-            Logger.Info($"Validated {certType.DisplayName} ({certType.ProductCode})configured for AnyGateway");
-        }
+			if (certType == null)
+			{
+				throw new ArgumentException($"Cannot find {productInfo.ProductID}", "ProductId");
+			}
 
-        #region Obsolete Methods
-        [Obsolete]
-        public override EnrollmentResult Enroll(string csr, string subject, Dictionary<string, string[]> san, EnrollmentProductInfo productInfo, CSS.PKI.PKIConstants.X509.RequestFormat requestFormat, RequestUtilities.EnrollmentType enrollmentType)
-        {
-            return UnsupportedMethod();
-        }
-        [Obsolete]
-        public override void Synchronize(ICertificateDataReader certificateDataReader, BlockingCollection<CertificateRecord> blockingBuffer, CertificateAuthoritySyncInfo certificateAuthoritySyncInfo, CancellationToken cancelToken, string logicalName)
-        {
-            UnsupportedMethod();
-        }
-        #endregion
+			Logger.Info($"Validated {certType.DisplayName} ({certType.ProductCode})configured for AnyGateway");
+		}
 
-        #region Private Methods
-        private EnrollmentResult UnsupportedMethod()
-        {
-            Logger.Error("This AnyGateway plugin is supported on AnyGateway 20.9+");
-            throw new NotImplementedException("This AnyGateway plugin is supported on AnyGateway 20.9+");
-        }
-        private static string ParseSubject(string subject, string rdn)
-        {
-            string escapedSubject = subject.Replace("\\,", "|");
-            string rdnString = escapedSubject.Split(',').ToList().Where(x => x.Contains(rdn)).FirstOrDefault();
+		#region Obsolete Methods
 
-            if (!string.IsNullOrEmpty(rdnString))
-            {
-                return rdnString.Replace(rdn, "").Replace("|", ",").Trim();
-            }
-            else
-            {
+		[Obsolete]
+		public override EnrollmentResult Enroll(string csr, string subject, Dictionary<string, string[]> san, EnrollmentProductInfo productInfo, CSS.PKI.PKIConstants.X509.RequestFormat requestFormat, RequestUtilities.EnrollmentType enrollmentType)
+		{
+			return UnsupportedMethod();
+		}
 
-                throw new Exception($"The request is missing a {rdn} value");
-            }
-        }
+		[Obsolete]
+		public override void Synchronize(ICertificateDataReader certificateDataReader, BlockingCollection<CertificateRecord> blockingBuffer, CertificateAuthoritySyncInfo certificateAuthoritySyncInfo, CancellationToken cancelToken, string logicalName)
+		{
+			UnsupportedMethod();
+		}
 
-        #endregion
-    }
+		#endregion Obsolete Methods
+
+		#region Private Methods
+
+		private EnrollmentResult UnsupportedMethod()
+		{
+			Logger.Error("This AnyGateway plugin is supported on AnyGateway 20.9+");
+			throw new NotImplementedException("This AnyGateway plugin is supported on AnyGateway 20.9+");
+		}
+
+		private static string ParseSubject(string subject, string rdn)
+		{
+			string escapedSubject = subject.Replace("\\,", "|");
+			string rdnString = escapedSubject.Split(',').ToList().Where(x => x.Contains(rdn)).FirstOrDefault();
+
+			if (!string.IsNullOrEmpty(rdnString))
+			{
+				return rdnString.Replace(rdn, "").Replace("|", ",").Trim();
+			}
+			else
+			{
+				throw new Exception($"The request is missing a {rdn} value");
+			}
+		}
+
+		#endregion Private Methods
+	}
 }
-
