@@ -153,6 +153,10 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 			Logger.Debug($"Attempting to pick up order with order ID {caRequestId}");
 			QbV1GetOrderByOrderIdRequest request = new QbV1GetOrderByOrderIdRequest
 			{
+				QueryRequestHeader = new Services.Query.QueryRequestHeader
+				{
+					AuthToken = Config.GetQueryAuthToken()
+				},
 				OrderID = caRequestId,
 				OrderQueryOption = new OrderQueryOption
 				{
