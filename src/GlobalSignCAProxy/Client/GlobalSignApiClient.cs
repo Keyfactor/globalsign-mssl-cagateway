@@ -132,7 +132,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 						ProductID = response.OrderDetail?.OrderInfo?.ProductCode,
 						SubmissionDate = subDate,
 						ResolutionDate = resDate,
-						Status = (int)orderStatus,
+						Status = OrderStatus.ConvertToKeyfactorStatus(orderStatus),
 						CSR = response.OrderDetail?.Fulfillment?.OriginalCSR,
 						Certificate = response.OrderDetail?.Fulfillment?.ServerCertificate?.X509Cert,
 						RevocationReason = 0,
@@ -155,6 +155,10 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 			Logger.Debug($"Attempting to pick up order with order ID {caRequestId}");
 			QbV1GetOrderByOrderIdRequest request = new QbV1GetOrderByOrderIdRequest
 			{
+				QueryRequestHeader = new Services.Query.QueryRequestHeader
+				{
+					AuthToken = Config.GetQueryAuthToken()
+				},
 				OrderID = caRequestId,
 				OrderQueryOption = new OrderQueryOption
 				{
@@ -184,7 +188,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 							ProductID = response.OrderDetail.OrderInfo.ProductCode,
 							SubmissionDate = orderDate,
 							ResolutionDate = completeDate,
-							Status = (int)orderStatus,
+							Status = OrderStatus.ConvertToKeyfactorStatus(orderStatus),
 							CSR = response.OrderDetail.Fulfillment.OriginalCSR,
 							Certificate = response.OrderDetail.Fulfillment.ServerCertificate.X509Cert,
 							RevocationReason = 0,

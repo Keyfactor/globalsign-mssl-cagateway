@@ -212,7 +212,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 						ProductID = c.OrderInfo?.ProductCode,
 						SubmissionDate = subDate,
 						ResolutionDate = resDate,
-						Status = (int)orderStatus,
+						Status = OrderStatus.ConvertToKeyfactorStatus(orderStatus),
 						CSR = c.Fulfillment?.OriginalCSR,
 						Certificate = c.Fulfillment?.ServerCertificate?.X509Cert,
 						RevocationReason = 0,
