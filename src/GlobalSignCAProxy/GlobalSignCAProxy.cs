@@ -64,6 +64,16 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				// If a match is found, set the common name to that SAN (GlobalSign API requires the CommonName field be populated)
 				string commonName = null;
 				DomainDetail domain = null;
+				var allDomains = apiClient.GetDomains();
+				// Only acccept domains that are able to issue certificates
+				// Status 3 - Approved, can issue certificates
+				// Status 7/9/0 - Domain Renewal is in process, can issue certificates until expiration date
+				List<string> validDomainStatus = new List<string>() { "3", "7", "9", "10" };
+				List<DomainDetail> validDomains = allDomains.Where(d => validDomainStatus.Contains(d.DomainStatus)).ToList();
+				if (validDomains.Count() == 0)
+				{
+					throw new Exception("No domains found that are valid for certificate enrollment");
+				}
 				try
 				{
 					commonName = ParseSubject(subject, "CN=");
@@ -77,7 +87,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 					var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
 					foreach (string dnsSan in sanDict["dns"])
 					{
-						var tempDomain = apiClient.GetDomains().Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+						var tempDomain = validDomains.Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 						if (tempDomain != null)
 						{
 							Logger.Debug($"SAN Domain match found for SAN: {dnsSan}");
@@ -89,7 +99,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				}
 				else
 				{
-					domain = apiClient.GetDomains().Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+					domain = validDomains.Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 				}
 
 				if (domain == null)
