@@ -65,6 +65,9 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				string commonName = null;
 				DomainDetail domain = null;
 				var allDomains = apiClient.GetDomains();
+				// Only acccept domains that are able to issue certificates
+				// Status 3 - Approved, can issue certificates
+				// Status 7/9/0 - Domain Renewal is in process, can issue certificates until expiration date
 				List<string> validDomainStatus = new List<string>() { "3", "7", "9", "10" };
 				List<DomainDetail> validDomains = allDomains.Where(d => validDomainStatus.Contains(d.DomainStatus)).ToList();
 				if (validDomains.Count() == 0)
