@@ -122,19 +122,21 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				{
 					Logger.Debug($"Certificate with request ID {caRequestID} successfully retrieved");
 					GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), response.OrderDetail.CertificateInfo.CertificateStatus);
-
+					DateTime? subDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDate, out DateTime orderDate) ? orderDate : (DateTime?)null;
+					DateTime? resDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderCompleteDate, out DateTime completeDate) ? completeDate : (DateTime?)null;
+					DateTime? revDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDeactivatedDate, out DateTime deactivateDate) ? deactivateDate : (DateTime?)null;
 					Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
 					return new CAConnectorCertificate()
 					{
 						CARequestID = caRequestID,
 						ProductID = response.OrderDetail?.OrderInfo?.ProductCode,
-						SubmissionDate = DateTime.Parse(response.OrderDetail?.OrderInfo?.OrderDate),
-						ResolutionDate = DateTime.Parse(response.OrderDetail?.OrderInfo?.OrderCompleteDate),
+						SubmissionDate = subDate,
+						ResolutionDate = resDate,
 						Status = (int)orderStatus,
 						CSR = response.OrderDetail?.Fulfillment?.OriginalCSR,
 						Certificate = response.OrderDetail?.Fulfillment?.ServerCertificate?.X509Cert,
 						RevocationReason = 0,
-						RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? DateTime.Parse(response.OrderDetail?.OrderInfo?.OrderDeactivatedDate) : new DateTime?()
+						RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? revDate : new DateTime?()
 					};
 				}
 				else
@@ -172,19 +174,21 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 					{
 						Logger.Debug($"Order with order ID {caRequestId} successfully picked up");
 						GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), response.OrderDetail.CertificateInfo.CertificateStatus);
-
+						DateTime? orderDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDate, out DateTime orderDateTime) ? orderDateTime : (DateTime?)null;
+						DateTime? completeDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderCompleteDate, out DateTime orderCompleteDate) ? orderCompleteDate : (DateTime?)null;
+						DateTime? deactivateDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDeactivatedDate, out DateTime orderDeactivateDate) ? orderDeactivateDate : (DateTime?)null;
 						Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
 						return new CAConnectorCertificate()
 						{
 							CARequestID = caRequestId,
 							ProductID = response.OrderDetail.OrderInfo.ProductCode,
-							SubmissionDate = DateTime.Parse(response.OrderDetail.OrderInfo.OrderDate),
-							ResolutionDate = DateTime.Parse(response.OrderDetail.OrderInfo.OrderCompleteDate),
+							SubmissionDate = orderDate,
+							ResolutionDate = completeDate,
 							Status = (int)orderStatus,
 							CSR = response.OrderDetail.Fulfillment.OriginalCSR,
 							Certificate = response.OrderDetail.Fulfillment.ServerCertificate.X509Cert,
 							RevocationReason = 0,
-							RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? DateTime.Parse(response.OrderDetail.OrderInfo.OrderDeactivatedDate) : new DateTime?()
+							RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? deactivateDate : new DateTime?()
 						};
 					}
 					retryCounter++;
