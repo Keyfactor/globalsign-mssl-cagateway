@@ -210,17 +210,20 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				foreach (var c in certs)
 				{
 					GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), c.CertificateInfo.CertificateStatus);
+					DateTime? subDate = DateTime.TryParse(c.OrderInfo?.OrderDate, out DateTime orderDate) ? orderDate : (DateTime?)null;
+					DateTime? resDate = DateTime.TryParse(c.OrderInfo?.OrderCompleteDate, out DateTime completeDate) ? completeDate : (DateTime?)null;
+					DateTime? revDate = DateTime.TryParse(c.OrderInfo?.OrderDeactivatedDate, out DateTime deactivateDate) ? deactivateDate : (DateTime?)null;
 					var certToAdd = new CAConnectorCertificate()
 					{
 						CARequestID = c.OrderInfo?.OrderId,
 						ProductID = c.OrderInfo?.ProductCode,
-						SubmissionDate = DateTime.Parse(c.OrderInfo?.OrderDate),
-						ResolutionDate = DateTime.Parse(c.OrderInfo?.OrderCompleteDate),
-						Status = (int)orderStatus,
+						SubmissionDate = subDate,
+						ResolutionDate = resDate,
+						Status = OrderStatus.ConvertToKeyfactorStatus(orderStatus),
 						CSR = c.Fulfillment?.OriginalCSR,
 						Certificate = c.Fulfillment?.ServerCertificate?.X509Cert,
 						RevocationReason = 0,
-						RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? DateTime.Parse(c.OrderInfo?.OrderDeactivatedDate) : new DateTime?()
+						RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? revDate : new DateTime?()
 					};
 					Logger.Trace($"Syncronization: Adding certificate with request ID {c.OrderInfo?.OrderId} to the results");
 					blockingBuffer.Add(certToAdd);
