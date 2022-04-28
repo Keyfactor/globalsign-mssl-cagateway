@@ -8,6 +8,8 @@ using CAProxy.AnyGateway.Models;
 using CAProxy.Common;
 
 using CSS.Common.Logging;
+using CSS.PKI;
+using CSS.PKI.X509;
 
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Api;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
@@ -354,7 +356,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				{
 					Logger.Debug($"Reissue request successfully submitted");
 					var pickupResponse = PickupCertificateById(response.OrderID);
-					X509Certificate2 cert = new X509Certificate2(Convert.FromBase64String(pickupResponse.Certificate));
+					var cert = CertificateConverterFactory.FromPEM(pickupResponse.Certificate).ToX509Certificate2();
 
 					if (pickupResponse.Status == 20 || (cert.SerialNumber != priorSn))
 					{
