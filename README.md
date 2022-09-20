@@ -140,7 +140,7 @@ The Certificate Managers section is optional.
 	}
 ```
 ## CAConnection
-The CA Connection section will determine the API endpoint and configuration data used to connect to Entrust CA Gateway. 
+The CA Connection section will determine the API endpoint and configuration data used to connect to GlobalSign MSSL API. 
 * ```IsTest```
 This determines if the test API endpoints are used with the Gateway.  
 * ```PickupRetries```
@@ -148,9 +148,9 @@ This is the number of times the AnyGateway will attempt to pickup an new certifi
 * ```PickupDelay```
 This is the number of seconds between retries when attempting to download a certificate. 
 * ```Username```
-This is the username that will be used to connect to the GloabalSign API
+This is the username that will be used to connect to the GlobalSign API
 * ```Password```
-This is the password that will be used to connect to the GloabalSign API
+This is the password that will be used to connect to the GlobalSign API
 
 ```json
   "CAConnection": {
