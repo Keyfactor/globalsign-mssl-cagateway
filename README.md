@@ -11,6 +11,15 @@ This repository contains an AnyGateway CA Connector, which is a plugin to the Ke
 ---
 
 
+## Support for GlobalSign Managed SSL AnyGateway
+
+GlobalSign Managed SSL AnyGateway is supported by Keyfactor for Keyfactor customers. If you have a support issue, please open a support ticket with your Keyfactor representative.
+
+###### To report a problem or suggest a new feature, use the **[Issues](../../issues)** tab. If you want to contribute actual bug fixes or proposed enhancements, use the **[Pull requests](../../pulls)** tab.
+___
+
+
+
 
 
 ---
