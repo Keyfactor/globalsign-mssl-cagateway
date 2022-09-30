@@ -5,5 +5,6 @@
   "status": "production",
   "update_catalog": true,
   "link_github": false,
+  "support_level": "kf-supported",
   "description": "This integration allows for the Synchronization, Enrollment, and Revocation of TLS Certificates from the GlobalSign Certificate Center."
 }
