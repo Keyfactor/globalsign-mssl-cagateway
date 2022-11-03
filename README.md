@@ -8,7 +8,6 @@ This integration allows for the Synchronization, Enrollment, and Revocation of T
 
 This repository contains an AnyGateway CA Connector, which is a plugin to the Keyfactor AnyGateway. AnyGateway CA Connectors allow Keyfactor Command to be used for inventory, issuance, and revocation of certificates from a third-party certificate authority.
 
----
 
 
 ## Support for GlobalSign Managed SSL AnyGateway
@@ -20,9 +19,6 @@ ___
 
 
 
-
-
----
 
 # Introduction
 This AnyGateway plug-in enables issuance, revocation, and synchronization of certificates from GlobalSign's Managed SSL/TLS offering. 
@@ -42,13 +38,23 @@ The GlobalSign API can filter requested based on IP address.  Ensure that approp
 ## Domain Point of Contact
 This AnyGateway plugin uses the contact information of the GCC Domain point of contact when enrolling for certificates.  These fields are required to submit and enrollment and must be populated on the Domain's point of contact. This can be found in the GlobalSign Portal in the Manage Domains page. 
 
-### Migration
+## Migration
 In the event that a system is being upgraded from the Legacy GlobalSign CA Gateway (19.4 or older), a migration from the legacy database format to the AnyGateway format will be required. 
 
-To begin the migration process, copy the GlobalSignEsentMigrator.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory. Afterwards, the DatabaseManagementConsole.exe.config will need to be updated to reference the GlobalSignEsentMigrator.  This is done by modifying the mapping for the IDatabaseMigrator inteface in the config file. 
+Database migration requires version 21.10 of the Keyfactor AnyGateway Framework (newer versions remove the migration capability).  
+
+To succesfully migrate and upgrade your GlobalSign CA Gateway, follow these steps:  
+1. Install Keyfactor AnyGateway Framework 21.10  
+2. Follow the steps below in the Install section to copy over the GlobalSignCAProxy.dll, but do NOT configure the gateway yet.  
+3. Additionally, copy over the GlobalSignEsentMigrator.dll file to the Program Files\Keyfactor\Keyfactor AnyGateway directory  
+4. Modify the DatabaseManagementConsole.exe.config file to update the IDatabaseMigrator definition:
 ```xml
-<register type="IDatabaseMigrator" mapTo="Keyfactor.AnyGateway.GlobalSign.Database.GlobalSignEsentMigrator, GlobalSignEsentMigrator" />
-```
+<register type="IDatabaseMigrator" mapTo="Keyfactor.Extensions.AnyGateway.Database.GlobalSignEsentMigrator, GlobalSignEsentMigrator" />
+```  
+5. Create your new database and use the appropriate cmdlets you configure the gateway's database connection (see AnyGateway documentation for details)
+6. Use the DatabaseManagementConsole.exe migrate verb to migrate your ESENT database into the new SQL database (see AnyGateway documentation, or run 'DatabaseManagementConsole.exe help migrate' for details)  
+7. Once the database has been migrated, you can run the actual gateway configuration cmdlet to configure your gateway.
+8. Optional: You can now upgrade to the latest version of the AnyGateway Framework if you wish (if you do so, after upgrading, make sure to run the DatabaseManagementConsole.exe with the upgrade verb to upgrade your database to the latest)  
 
 
 # Install
