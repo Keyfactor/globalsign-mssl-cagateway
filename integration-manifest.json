@@ -4,7 +4,7 @@
   "name": "GlobalSign Managed SSL AnyGateway",
   "status": "production",
   "update_catalog": true,
-  "link_github": false,
+  "link_github": true,
   "support_level": "kf-supported",
   "description": "This integration allows for the Synchronization, Enrollment, and Revocation of TLS Certificates from the GlobalSign Certificate Center."
 }
