@@ -82,9 +82,9 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				{
 					Logger.Warn("Subject is missing a CN value. Using SAN domain lookup instead");
 				}
+				var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
 				if (commonName == null)
 				{
-					var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
 					foreach (string dnsSan in sanDict["dns"])
 					{
 						var tempDomain = validDomains.Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
@@ -112,6 +112,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				var months = productInfo.ProductParameters["Lifetime"];
 				Logger.Debug($"Using validity: {months} months.");
 
+				List<string> sanList = new List<string>();
+				foreach (string dnsSan in sanDict["dns"])
+				{
+					sanList.Add(dnsSan);
+				}
+
 				var productType = GlobalSignCertType.AllTypes.Where(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
 				CAConnectorCertificate priorCert = null;
@@ -134,6 +140,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 							Phone = domain?.ContactInfo?.Phone,
 							CommonName = commonName,
 							ProductCode = productType.ProductCode,
+							SANs = sanList,
 						};
 
 						return apiClient.Enroll(request);
@@ -156,7 +163,8 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 							Phone = domain?.ContactInfo?.Phone,
 							CommonName = commonName,
 							ProductCode = productType.ProductCode,
-							RenewalTargetOrderId = priorCert.CARequestID
+							RenewalTargetOrderId = priorCert.CARequestID,
+							SANs = sanList
 						};
 
 						return apiClient.Renew(renewRequest);
@@ -167,7 +175,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 						GlobalSignReissueRequest reissueRequest = new GlobalSignReissueRequest(Config)
 						{
 							CSR = csr,
-							OrderID = priorCert.CARequestID
+							OrderID = priorCert.CARequestID,
 						};
 
 						return apiClient.Reissue(reissueRequest, priorSn);
