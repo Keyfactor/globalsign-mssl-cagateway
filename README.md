@@ -1,20 +1,21 @@
+
 # GlobalSign Managed SSL AnyGateway
 
 This integration allows for the Synchronization, Enrollment, and Revocation of TLS Certificates from the GlobalSign Certificate Center.
 
 #### Integration status: Production - Ready for use in production environments.
 
-
 ## About the Keyfactor AnyGateway CA Connector
 
 This repository contains an AnyGateway CA Connector, which is a plugin to the Keyfactor AnyGateway. AnyGateway CA Connectors allow Keyfactor Command to be used for inventory, issuance, and revocation of certificates from a third-party certificate authority.
-
 
 ## Support for GlobalSign Managed SSL AnyGateway
 
 GlobalSign Managed SSL AnyGateway is supported by Keyfactor for Keyfactor customers. If you have a support issue, please open a support ticket via the Keyfactor Support Portal at https://support.keyfactor.com
 
 ###### To report a problem or suggest a new feature, use the **[Issues](../../issues)** tab. If you want to contribute actual bug fixes or proposed enhancements, use the **[Pull requests](../../pulls)** tab.
+
+---
 
 
 ---
@@ -23,6 +24,11 @@ GlobalSign Managed SSL AnyGateway is supported by Keyfactor for Keyfactor custom
 
 
 
+## Keyfactor AnyGateway Framework Supported
+
+This gateway was compiled against version  of the AnyGateway Framework.  You will need at least this version of the AnyGateway Framework Installed.  If you have a later AnyGateway Framework Installed you will probably need to add binding redirects in the CAProxyServer.exe.config file to make things work properly.
+
+[Keyfactor CAGateway Install Guide](https://software.keyfactor.com/Guides/AnyGateway_Generic/Content/AnyGateway/Introduction.htm)
 
 
 
