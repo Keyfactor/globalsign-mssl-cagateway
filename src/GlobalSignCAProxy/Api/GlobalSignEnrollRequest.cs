@@ -85,13 +85,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 							entry.SubjectAltName = item;
 							if (item.StartsWith("*"))
 							{
-								entry.SubjectAltName = "13";
+								entry.SANOptionType = "13";
 							}
 							else
 							{
-								entry.SubjectAltName = "7";
+								entry.SANOptionType = "7";
 							}
-							sans.Add(entry);
 						}
 						request.SANEntries = sans.ToArray();
 					}
