@@ -19,11 +19,15 @@ using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 
 using Newtonsoft.Json;
 
+using Org.BouncyCastle.Crypto.Tls;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Web.Services.Configuration;
 
 namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 {
@@ -82,7 +86,21 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				{
 					Logger.Warn("Subject is missing a CN value. Using SAN domain lookup instead");
 				}
+				StringBuilder rawSanList = new StringBuilder();
+				rawSanList.Append("Raw SAN List:\n");
+				foreach (var sanType in san.Keys)
+				{
+					rawSanList.Append($"SAN Type: {sanType}. Values: ");
+					foreach (var indivSan in san[sanType])
+					{
+						rawSanList.Append($"{indivSan},");
+					}
+					rawSanList.Append('\n');
+				}
+				Logger.Trace(rawSanList.ToString());
+	
 				var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
+				Logger.Trace($"DNS SAN Count: {sanDict["dns"].Count()}");
 				if (commonName == null)
 				{
 					foreach (string dnsSan in sanDict["dns"])
