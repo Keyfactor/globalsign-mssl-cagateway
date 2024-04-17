@@ -1,52 +1,102 @@
+
 # GlobalSign Managed SSL AnyGateway
-## Ca-gateway
 
 This integration allows for the Synchronization, Enrollment, and Revocation of TLS Certificates from the GlobalSign Certificate Center.
 
-*** 
-## Introduction
-This AnyGateway plug enables issuance, revocation, and synchronization of certificates from GlobalSign's Managed SSL/TLS offering.  
-## Prerequisites
+#### Integration status: Production - Ready for use in production environments.
 
-### Certificate Chain
+## About the Keyfactor AnyCA Gateway DCOM Connector
+
+This repository contains an AnyCA Gateway Connector, which is a plugin to the Keyfactor AnyGateway. AnyCA Gateway Connectors allow Keyfactor Command to be used for inventory, issuance, and revocation of certificates from a third-party certificate authority.
+
+## Support for GlobalSign Managed SSL AnyGateway
+
+GlobalSign Managed SSL AnyGateway is supported by Keyfactor for Keyfactor customers. If you have a support issue, please open a support ticket via the Keyfactor Support Portal at https://support.keyfactor.com
+
+###### To report a problem or suggest a new feature, use the **[Issues](../../issues)** tab. If you want to contribute actual bug fixes or proposed enhancements, use the **[Pull requests](../../pulls)** tab.
+
+---
+
+
+---
+
+
+
+
+
+## Keyfactor AnyCA Gateway Framework Supported
+The Keyfactor gateway framework implements common logic shared across various gateway implementations and handles communication with Keyfactor Command. The gateway framework hosts gateway implementations or plugins that understand how to communicate with specific CAs. This allows you to integrate your third-party CAs with Keyfactor Command such that they behave in a manner similar to the CAs natively supported by Keyfactor Command.
+
+
+
+
+This gateway extension was compiled against version  of the AnyCA Gateway DCOM Framework.  You will need at least this version of the framework Installed. If you have a later AnyGateway Framework Installed you will probably need to add binding redirects in the CAProxyServer.exe.config file to make things work properly.
+
+
+[Keyfactor CAGateway Install Guide](https://software.keyfactor.com/Guides/AnyGateway_Generic/Content/AnyGateway/Introduction.htm)
+
+
+
+---
+
+
+# Introduction
+This AnyGateway plug-in enables issuance, revocation, and synchronization of certificates from GlobalSign's Managed SSL/TLS offering. 
+
+# Compatibility
+This AnyGateway is designed to be used with version 21.3.2 of the Keyfactor AnyGateway Framework
+
+# Prerequisites
+
+## Certificate Chain
 
 In order to enroll for certificates the Keyfactor Command server must trust the trust chain. Once you create your Root and/or Subordinate CA, make sure to import the certificate chain into the AnyGateway and Command Server certificate store
 
-### API Allow List
+## API Allow List
 The GlobalSign API can filter requested based on IP address.  Ensure that appropiate IP address is allowed to make requests to the GlobalSign API.
 
-### Domain Point of Contact
+## Domain Point of Contact
 This AnyGateway plugin uses the contact information of the GCC Domain point of contact when enrolling for certificates.  These fields are required to submit and enrollment and must be populated on the Domain's point of contact. This can be found in the GlobalSign Portal in the Manage Domains page. 
 
-### Migration
+## Migration
 In the event that a system is being upgraded from the Legacy GlobalSign CA Gateway (19.4 or older), a migration from the legacy database format to the AnyGateway format will be required. 
 
-To begin the migration process, copy the GlobalSignEsentMigrator.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory. Afterwardsm, the DatabaseManagementConsole.exe.config will need to be updated to reference the GlobalSignEsentMigrator.  This is one by modifying the mapping for the IDatabaseMigrator inteface in the config file. 
+Database migration requires version 21.10 of the Keyfactor AnyGateway Framework (newer versions remove the migration capability).  
+
+To succesfully migrate and upgrade your GlobalSign CA Gateway, follow these steps:  
+1. Install Keyfactor AnyGateway Framework 21.10  
+2. Follow the steps below in the Install section to copy over the GlobalSignCAProxy.dll, but do NOT configure the gateway yet.  
+3. Additionally, copy over the GlobalSignEsentMigrator.dll file to the Program Files\Keyfactor\Keyfactor AnyGateway directory  
+4. Modify the DatabaseManagementConsole.exe.config file to update the IDatabaseMigrator definition:
 ```xml
-<register type="IDatabaseMigrator" mapTo="Keyfactor.AnyGateway.GlobalSign.Database.GlobalSignEsentMigrator, GlobalSignEsentMigrator" />
-```
+<register type="IDatabaseMigrator" mapTo="Keyfactor.Extensions.AnyGateway.Database.GlobalSignEsentMigrator, GlobalSignEsentMigrator" />
+```  
+5. Create your new database and use the appropriate cmdlets you configure the gateway's database connection (see AnyGateway documentation for details)
+6. Use the DatabaseManagementConsole.exe migrate verb to migrate your ESENT database into the new SQL database (see AnyGateway documentation, or run 'DatabaseManagementConsole.exe help migrate' for details)  
+7. Once the database has been migrated, you can run the actual gateway configuration cmdlet to configure your gateway.
+8. Optional: You can now upgrade to the latest version of the AnyGateway Framework if you wish (if you do so, after upgrading, make sure to run the DatabaseManagementConsole.exe with the upgrade verb to upgrade your database to the latest)  
 
 
-## Install
+# Install
 * Download latest successful build from [GitHub Releases](/releases/latest)
 
-* Copy GloabalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory
+* Copy GlobalSignCAProxy.dll to the Program Files\Keyfactor\Keyfactor AnyGateway directory
 
 * Update the CAProxyServer.config file
-  * Update the CAConnection section to point at the GloabalSignCAProxy class
+  * Update the CAConnection section to point at the GlobalSignCAProxy class
   ```xml
-  <alias alias="CAConnector" type="Keyfactor.Extensions.AnyGateway.GlobalSign.GloabalSignCAProxy, GloabalSignCAProxy"/>
+  <alias alias="CAConnector" type="Keyfactor.Extensions.AnyGateway.GlobalSign.GlobalSignCAProxy, GlobalSignCAProxy"/>
   ```
 
-## Configuration
+# Configuration
 The following sections will breakdown the required configurations for the AnyGatewayConfig.json file that will be imported to configure the AnyGateway.
 
-### Templates
+## Templates
 The Template section will map the CA's SSL profile to an AD template. The Lifetime parameter is required and represents the certificate duration in months. 
  ```json
   "Templates": {
 	"WebServer": {
-      "ProductID": "PEV",
+      "ProductID": "PV_SHA2",
       "Parameters": {
 		"Lifetime":"12"
       }
@@ -63,8 +113,8 @@ The Template section will map the CA's SSL profile to an AD template. The Lifeti
  * Cloud SSL SHA 256 ECDSA (PV_CLOUD_ECC2)
  
  
-### Security
-The security section does not change specifically for the Entrust CA Gateway.  Refer to the AnyGateway Documentation for more detail.
+## Security
+The security section does not change specifically for the GlobalSign CA Gateway.  Refer to the AnyGateway Documentation for more detail.
 ```json
   /*Grant permissions on the CA to users or groups in the local domain.
 	READ: Enumerate and read contents of certificates.
@@ -99,7 +149,7 @@ The security section does not change specifically for the Entrust CA Gateway.  R
         }
     }
 ```
-### CerificateManagers
+## CerificateManagers
 The Certificate Managers section is optional.
 	If configured, all users or groups granted OFFICER permissions under the Security section
 	must be configured for at least one Template and one Requester. 
@@ -124,8 +174,8 @@ The Certificate Managers section is optional.
 		}
 	}
 ```
-### CAConnection
-The CA Connection section will determine the API endpoint and configuration data used to connect to Entrust CA Gateway. 
+## CAConnection
+The CA Connection section will determine the API endpoint and configuration data used to connect to GlobalSign MSSL API. 
 * ```IsTest```
 This determines if the test API endpoints are used with the Gateway.  
 * ```PickupRetries```
@@ -133,9 +183,9 @@ This is the number of times the AnyGateway will attempt to pickup an new certifi
 * ```PickupDelay```
 This is the number of seconds between retries when attempting to download a certificate. 
 * ```Username```
-This is the username that will be used to connect to the GloabalSign API
+This is the username that will be used to connect to the GlobalSign API
 * ```Password```
-This is the password that will be used to connect to the GloabalSign API
+This is the password that will be used to connect to the GlobalSign API
 
 ```json
   "CAConnection": {
@@ -146,11 +196,11 @@ This is the password that will be used to connect to the GloabalSign API
 	"Password":"password"
   },
 ```
-### GatewayRegistration
-There are no specific Changes for the GatewayRegistration section. Refer to the Refer to the AnyGateway Documentation for more detail.
+## GatewayRegistration
+There are no specific Changes for the GatewayRegistration section. Refer to the AnyGateway Documentation for more detail.
 ```json
   "GatewayRegistration": {
-    "LogicalName": "GlobalsSignCASandbox",
+    "LogicalName": "GlobalSignCASandbox",
     "GatewayCertificate": {
       "StoreName": "CA",
       "StoreLocation": "LocalMachine",
@@ -159,8 +209,8 @@ There are no specific Changes for the GatewayRegistration section. Refer to the 
   }
 ```
 
-### ServiceSettings
-There are no specific Changes for the GatewayRegistration section. Refer to the Refer to the AnyGateway Documentation for more detail.
+## ServiceSettings
+There are no specific Changes for the ServiceSettings section. Refer to the AnyGateway Documentation for more detail.
 ```json
   "ServiceSettings": {
     "ViewIdleMinutes": 8,
@@ -168,3 +218,4 @@ There are no specific Changes for the GatewayRegistration section. Refer to the 
 	"PartialScanPeriodMinutes": 240 
   }
 ```
+
