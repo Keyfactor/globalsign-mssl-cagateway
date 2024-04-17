@@ -19,11 +19,15 @@ using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 
 using Newtonsoft.Json;
 
+using Org.BouncyCastle.Crypto.Tls;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Web.Services.Configuration;
 
 namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 {
@@ -82,9 +86,23 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				{
 					Logger.Warn("Subject is missing a CN value. Using SAN domain lookup instead");
 				}
+				StringBuilder rawSanList = new StringBuilder();
+				rawSanList.Append("Raw SAN List:\n");
+				foreach (var sanType in san.Keys)
+				{
+					rawSanList.Append($"SAN Type: {sanType}. Values: ");
+					foreach (var indivSan in san[sanType])
+					{
+						rawSanList.Append($"{indivSan},");
+					}
+					rawSanList.Append('\n');
+				}
+				Logger.Trace(rawSanList.ToString());
+	
+				var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
+				Logger.Trace($"DNS SAN Count: {sanDict["dns"].Count()}");
 				if (commonName == null)
 				{
-					var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
 					foreach (string dnsSan in sanDict["dns"])
 					{
 						var tempDomain = validDomains.Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
@@ -112,6 +130,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				var months = productInfo.ProductParameters["Lifetime"];
 				Logger.Debug($"Using validity: {months} months.");
 
+				List<string> sanList = new List<string>();
+				foreach (string dnsSan in sanDict["dns"])
+				{
+					sanList.Add(dnsSan);
+				}
+
 				var productType = GlobalSignCertType.AllTypes.Where(x => x.ProductCode.Equals(productInfo.ProductID, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
 				CAConnectorCertificate priorCert = null;
@@ -134,6 +158,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 							Phone = domain?.ContactInfo?.Phone,
 							CommonName = commonName,
 							ProductCode = productType.ProductCode,
+							SANs = sanList,
 						};
 
 						return apiClient.Enroll(request);
@@ -156,7 +181,8 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 							Phone = domain?.ContactInfo?.Phone,
 							CommonName = commonName,
 							ProductCode = productType.ProductCode,
-							RenewalTargetOrderId = priorCert.CARequestID
+							RenewalTargetOrderId = priorCert.CARequestID,
+							SANs = sanList
 						};
 
 						return apiClient.Renew(renewRequest);
@@ -167,7 +193,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 						GlobalSignReissueRequest reissueRequest = new GlobalSignReissueRequest(Config)
 						{
 							CSR = csr,
-							OrderID = priorCert.CARequestID
+							OrderID = priorCert.CARequestID,
 						};
 
 						return apiClient.Reissue(reissueRequest, priorSn);
