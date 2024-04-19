@@ -91,6 +91,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 							{
 								entry.SANOptionType = "7";
 							}
+							sans.Add(entry);
 						}
 						request.SANEntries = sans.ToArray();
 					}
