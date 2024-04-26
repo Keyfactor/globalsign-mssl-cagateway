@@ -5,13 +5,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
 // and limitations under the License.
 
+using CSS.Common.Logging;
+
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 {
-	public class GlobalSignEnrollRequest
+	public class GlobalSignEnrollRequest : LoggingClientBase
 	{
 		internal GlobalSignCAConfig Config;
 
@@ -81,20 +85,39 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 						List<SANEntry> sans = new List<SANEntry>();
 						foreach (string item in SANs)
 						{
+							if (string.Equals(item, CommonName, System.StringComparison.OrdinalIgnoreCase))
+							{
+								Logger.Info($"SAN Entry {item} matches CN, removing from request");
+								continue;
+							}
 							SANEntry entry = new SANEntry();
 							entry.SubjectAltName = item;
+							StringBuilder sb = new StringBuilder();
+							sb.Append($"Adding SAN entry of type ");
 							if (item.StartsWith("*"))
 							{
 								entry.SANOptionType = "13";
+								sb.Append("WILDCARD");
 							}
 							else
 							{
 								entry.SANOptionType = "7";
+								sb.Append("FQDN");
 							}
+							sb.Append($" and value {item} to request");
+							Logger.Info(sb.ToString());
 							sans.Add(entry);
 						}
 						request.SANEntries = sans.ToArray();
 					}
+				}
+				List<Option> options = new List<Option>();
+				if (request.SANEntries.Count() > 0)
+				{
+					var opt = new Option();
+					opt.OptionName = "SAN";
+					opt.OptionValue = "True";
+					options.Add(opt);
 				}
 				ValidityPeriod validityPeriod = new ValidityPeriod();
 				validityPeriod.Months = Months;
@@ -104,7 +127,8 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 					OrderKind = OrderKind,
 					Licenses = Licenses,
 					CSR = CSR,
-					ValidityPeriod = validityPeriod
+					ValidityPeriod = validityPeriod,
+					Options = options.ToArray()
 				};
 				if (!string.IsNullOrEmpty(BaseOption))
 				{
