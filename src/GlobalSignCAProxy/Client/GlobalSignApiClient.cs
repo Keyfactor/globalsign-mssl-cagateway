@@ -257,6 +257,18 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
 			using (this.OrderService)
 			{
+				var rawRequest = enrollRequest.Request;
+				Logger.Trace($"Request details:");
+				Logger.Trace($"Profile ID: {rawRequest.MSSLProfileID}");
+				Logger.Trace($"Domain ID: {rawRequest.MSSLDomainID}");
+				Logger.Trace($"Contact Info: {rawRequest.ContactInfo.FirstName}, {rawRequest.ContactInfo.LastName}, {rawRequest.ContactInfo.Email}, {rawRequest.ContactInfo.Phone}");
+				Logger.Trace($"SAN Count: {rawRequest.SANEntries.Count()}");
+				if (rawRequest.SANEntries.Count() > 0)
+				{
+					Logger.Trace($"SANs: {string.Join(",", rawRequest.SANEntries.Select(s => s.SubjectAltName))}");
+				}
+				Logger.Trace($"Product Code: {rawRequest.OrderRequestParameter.ProductCode}");
+				Logger.Trace($"Order Kind: {rawRequest.OrderRequestParameter.OrderKind}");
 				var response = OrderService.PVOrder(enrollRequest.Request);
 				if (response.OrderResponseHeader.SuccessCode == 0)
 				{
