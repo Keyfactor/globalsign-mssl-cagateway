@@ -18,3 +18,6 @@ Fix authentication bug when picking up certificates
 
 1.0.15
 Better datetime parsing of returned certificates
+
+1.0.16
+Fix for adding additional SANs to certificate requests
