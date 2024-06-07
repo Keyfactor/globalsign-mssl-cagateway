@@ -258,17 +258,64 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 			using (this.OrderService)
 			{
 				var rawRequest = enrollRequest.Request;
-				Logger.Trace($"Request details:");
-				Logger.Trace($"Profile ID: {rawRequest.MSSLProfileID}");
-				Logger.Trace($"Domain ID: {rawRequest.MSSLDomainID}");
-				Logger.Trace($"Contact Info: {rawRequest.ContactInfo.FirstName}, {rawRequest.ContactInfo.LastName}, {rawRequest.ContactInfo.Email}, {rawRequest.ContactInfo.Phone}");
-				Logger.Trace($"SAN Count: {rawRequest.SANEntries.Count()}");
-				if (rawRequest.SANEntries.Count() > 0)
+				//Logger.Trace($"Request details:");
+				//Logger.Trace($"Profile ID: {rawRequest.MSSLProfileID}");
+				//Logger.Trace($"Domain ID: {rawRequest.MSSLDomainID}");
+				//Logger.Trace($"Contact Info: {rawRequest.ContactInfo.FirstName}, {rawRequest.ContactInfo.LastName}, {rawRequest.ContactInfo.Email}, {rawRequest.ContactInfo.Phone}");
+				//Logger.Trace($"SAN Count: {rawRequest.SANEntries.Count()}");
+				//if (rawRequest.SANEntries.Count() > 0)
+				//{
+				//	Logger.Trace($"SANs: {string.Join(",", rawRequest.SANEntries.Select(s => s.SubjectAltName))}");
+				//}
+				//Logger.Trace($"Product Code: {rawRequest.OrderRequestParameter.ProductCode}");
+				//Logger.Trace($"Order Kind: {rawRequest.OrderRequestParameter.OrderKind}");
+
+
+				Logger.Trace($"BmV2PvOrderRequest details:");
+				Logger.Trace($"PvOrderRequest.CertificateTemplate.Template: {rawRequest.CertificateTemplate.Template}");
+				Logger.Trace($"PvOrderRequest.CertificateTemplate.MajorVersion: {rawRequest.CertificateTemplate.MajorVersion}");
+				Logger.Trace($"PvOrderRequest.CertificateTemplate.MinorVersion: {rawRequest.CertificateTemplate.MinorVersion}");
+				Logger.Trace($"PvOrderRequest.OrderRequestHeader.AuthToken.Username: {rawRequest.OrderRequestHeader.AuthToken.UserName}");
+				Logger.Trace($"PvOrderRequest.OrderRequestHeader.AuthToken.Password: <Redacted>");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.ProductCode: {rawRequest.OrderRequestParameter.ProductCode}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.BaseOption: {rawRequest.OrderRequestParameter.BaseOption}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.OrderKind: {rawRequest.OrderRequestParameter.OrderKind}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.Licenses: {rawRequest.OrderRequestParameter.Licenses}");
+				foreach (var opt in rawRequest.OrderRequestParameter.Options)
 				{
-					Logger.Trace($"SANs: {string.Join(",", rawRequest.SANEntries.Select(s => s.SubjectAltName))}");
+					Logger.Trace($"PvOrderRequest.OrderRequestParameter.Option[{opt.OptionName}]: {opt.OptionValue}");
 				}
-				Logger.Trace($"Product Code: {rawRequest.OrderRequestParameter.ProductCode}");
-				Logger.Trace($"Order Kind: {rawRequest.OrderRequestParameter.OrderKind}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.ValidityPeriod.Months: {rawRequest.OrderRequestParameter.ValidityPeriod.Months}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.ValidityPeriod.NotBefore: {rawRequest.OrderRequestParameter.ValidityPeriod.NotBefore}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.ValidityPeriod.NotAfter: {rawRequest.OrderRequestParameter.ValidityPeriod.NotAfter}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.CSR: {rawRequest.OrderRequestParameter.CSR}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.RenewalTargetOrderID: {rawRequest.OrderRequestParameter.RenewalTargetOrderID}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.TargetCert: {rawRequest.OrderRequestParameter.TargetCERT}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.SpecialInstructions: {rawRequest.OrderRequestParameter.SpecialInstructions}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.Coupon: {rawRequest.OrderRequestParameter.Coupon}");
+				Logger.Trace($"PvOrderRequest.OrderRequestParameter.Campaign: {rawRequest.OrderRequestParameter.Campaign}");
+				Logger.Trace($"PvOrderRequest.MsslProfileId: {rawRequest.MSSLProfileID}");
+				Logger.Trace($"PvOrderRequest.MsslDomainId: {rawRequest.MSSLDomainID}");
+				Logger.Trace($"PvOrderRequest.SubId: {rawRequest.SubID}");
+				Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine1: {rawRequest.PVSealInfo.AddressLine1}");
+				Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine2: {rawRequest.PVSealInfo.AddressLine2}");
+				Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine3: {rawRequest.PVSealInfo.AddressLine3}");
+				Logger.Trace($"PvOrderRequest.PvSealInfo.PostalCode: {rawRequest.PVSealInfo.PostalCode}");
+				Logger.Trace($"PvOrderRequest.PvSealInfo.Phone: {rawRequest.PVSealInfo.Phone}");
+				Logger.Trace($"PvOrderRequest.PvSealInfo.Fax: {rawRequest.PVSealInfo.Fax}");
+				Logger.Trace($"PvOrderRequest.ContactInfo.FirstName: {rawRequest.ContactInfo.FirstName}");
+				Logger.Trace($"PvOrderRequest.ContactInfo.LastName: {rawRequest.ContactInfo.LastName}");
+				Logger.Trace($"PvOrderRequest.ContactInfo.Phone: {rawRequest.ContactInfo.Phone}");
+				Logger.Trace($"PvOrderRequest.ContactInfo.Email: {rawRequest.ContactInfo.Email}");
+				foreach (var san in rawRequest.SANEntries)
+				{
+					Logger.Trace($"PvOrderRequest.SAN: {san.SubjectAltName}, {san.SANOptionType}");
+				}
+				foreach (var ext in rawRequest.Extensions)
+				{
+					Logger.Trace($"PvOrderRequest.Extensions[{ext.Name}]: {ext.Value}");
+				}
+
 				var response = OrderService.PVOrder(enrollRequest.Request);
 				if (response.OrderResponseHeader.SuccessCode == 0)
 				{
