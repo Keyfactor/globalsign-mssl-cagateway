@@ -294,16 +294,22 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				Logger.Trace($"PvOrderRequest.MsslProfileId: {rawRequest.MSSLProfileID ?? string.Empty}");
 				Logger.Trace($"PvOrderRequest.MsslDomainId: {rawRequest.MSSLDomainID ?? string.Empty}");
 				Logger.Trace($"PvOrderRequest.SubId: {rawRequest.SubID ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine1: {rawRequest.PVSealInfo.AddressLine1 ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine2: {rawRequest.PVSealInfo.AddressLine2 ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine3: {rawRequest.PVSealInfo.AddressLine3 ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.PvSealInfo.PostalCode: {rawRequest.PVSealInfo.PostalCode ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.PvSealInfo.Phone: {rawRequest.PVSealInfo.Phone ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.PvSealInfo.Fax: {rawRequest.PVSealInfo.Fax ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.ContactInfo.FirstName: {rawRequest.ContactInfo.FirstName ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.ContactInfo.LastName: {rawRequest.ContactInfo.LastName ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.ContactInfo.Phone: {rawRequest.ContactInfo.Phone ?? string.Empty}");
-				Logger.Trace($"PvOrderRequest.ContactInfo.Email: {rawRequest.ContactInfo.Email ?? string.Empty}");
+				if (rawRequest.PVSealInfo != null)
+				{
+					Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine1: {rawRequest.PVSealInfo.AddressLine1 ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine2: {rawRequest.PVSealInfo.AddressLine2 ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.PvSealInfo.AddressLine3: {rawRequest.PVSealInfo.AddressLine3 ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.PvSealInfo.PostalCode: {rawRequest.PVSealInfo.PostalCode ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.PvSealInfo.Phone: {rawRequest.PVSealInfo.Phone ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.PvSealInfo.Fax: {rawRequest.PVSealInfo.Fax ?? string.Empty}");
+				}
+				if (rawRequest.ContactInfo != null)
+				{
+					Logger.Trace($"PvOrderRequest.ContactInfo.FirstName: {rawRequest.ContactInfo.FirstName ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.ContactInfo.LastName: {rawRequest.ContactInfo.LastName ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.ContactInfo.Phone: {rawRequest.ContactInfo.Phone ?? string.Empty}");
+					Logger.Trace($"PvOrderRequest.ContactInfo.Email: {rawRequest.ContactInfo.Email ?? string.Empty}");
+				}
 				foreach (var san in rawRequest.SANEntries)
 				{
 					Logger.Trace($"PvOrderRequest.SAN: {san.SubjectAltName}, {san.SANOptionType}");
