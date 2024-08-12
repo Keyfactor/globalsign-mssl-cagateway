@@ -144,6 +144,10 @@ This is the number of seconds between retries when attempting to download a cert
 This is the username that will be used to connect to the GlobalSign API
 * ```Password```
 This is the password that will be used to connect to the GlobalSign API
+* ```SyncStartDate```  
+OPTIONAL: If provided, full syncs will start at the specified date.
+* ```SyncIntervalDays```  
+OPTIONAL: Required if SyncStartDate is used. Specifies how to page the certificate sync. Should be a value such that no interval of that length contains > 500 certificate enrollments.
 
 ```json
   "CAConnection": {
