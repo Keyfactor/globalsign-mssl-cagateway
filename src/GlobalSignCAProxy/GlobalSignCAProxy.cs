@@ -47,11 +47,34 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 		public override EnrollmentResult Enroll(ICertificateDataReader certificateDataReader, string csr, string subject, Dictionary<string, string[]> san, EnrollmentProductInfo productInfo, PKIConstants.X509.RequestFormat requestFormat, RequestUtilities.EnrollmentType enrollmentType)
 		{
 			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
-			CAProxy.Common.Config.ADUserInfoResolver userInfoResolver = new ADUserInfoResolver();
+			string requesterName = "";
+			if (productInfo.ProductParameters.ContainsKey("ContactName") && !string.IsNullOrEmpty(productInfo.ProductParameters["ContactName"]))
+			{
+				requesterName = productInfo.ProductParameters["ContactName"];
+			}
 
-			var requestor = productInfo.ProductParameters["Keyfactor-Requester"];
-			Logger.Debug($"Resolving requesting user as '{requestor}'");
-			var userInfo = userInfoResolver.Resolve(requestor);
+			if (string.IsNullOrEmpty(requesterName))
+			{
+				if (productInfo.ProductParameters.ContainsKey("Keyfactor-Requester"))
+				{
+					var requestor = productInfo.ProductParameters["Keyfactor-Requester"];
+					if (!string.IsNullOrEmpty(requestor))
+					{
+						try
+						{
+							ADUserInfoResolver userInfoResolver = new ADUserInfoResolver();
+							Logger.Debug($"Resolving requesting user as '{requestor}'");
+							var userInfo = userInfoResolver.Resolve(requestor);
+							requesterName = userInfo.Name;
+						} catch (Exception) { }
+					}
+				}
+			}
+
+			if (string.IsNullOrEmpty(requesterName))
+			{
+				throw new Exception("ContactName configuration field is required but not found, or could not be looked up");
+			}
 
 			try
 			{
@@ -153,8 +176,8 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 							Licenses = "1",
 							OrderKind = "new",
 							Months = months,
-							FirstName = userInfo.Name,
-							LastName = userInfo.Name,
+							FirstName = requesterName,
+							LastName = requesterName,
 							Email = domain?.ContactInfo?.Email,
 							Phone = domain?.ContactInfo?.Phone,
 							CommonName = commonName,
@@ -176,8 +199,8 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 							Licenses = "1",
 							OrderKind = "renewal",
 							Months = months,
-							FirstName = userInfo.Name,
-							LastName = userInfo.Name,
+							FirstName = requesterName,
+							LastName = requesterName,
 							Email = domain?.ContactInfo?.Email,
 							Phone = domain?.ContactInfo?.Phone,
 							CommonName = commonName,
