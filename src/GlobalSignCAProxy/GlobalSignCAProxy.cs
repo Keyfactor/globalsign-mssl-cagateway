@@ -25,6 +25,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Web.Services.Configuration;
@@ -233,8 +234,14 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 			{
 				GlobalSignApiClient apiClient = new GlobalSignApiClient(Config);
 
-				DateTime? syncFrom = certificateAuthoritySyncInfo.DoFullSync ? new DateTime(2000, 01, 01) : certificateAuthoritySyncInfo.OverallLastSync;
-				var certs = apiClient.GetCertificatesForSync(certificateAuthoritySyncInfo.DoFullSync, syncFrom);
+				DateTime fullSyncFrom = new DateTime(2000, 01, 01);
+				if (!string.IsNullOrEmpty(Config.SyncStartDate))
+				{
+					fullSyncFrom = DateTime.Parse(Config.SyncStartDate);
+				}
+
+				DateTime? syncFrom = certificateAuthoritySyncInfo.DoFullSync ? fullSyncFrom : certificateAuthoritySyncInfo.OverallLastSync;
+				var certs = apiClient.GetCertificatesForSync(certificateAuthoritySyncInfo.DoFullSync, syncFrom, fullSyncFrom, Config.SyncIntervalDays);
 
 				foreach (var c in certs)
 				{
@@ -332,6 +339,15 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 
 			var apiClient = new GlobalSignApiClient(validateConfig);
 			apiClient.GetDomains().ForEach(x => Logger.Info($"Connection established for {x.DomainName}"));
+
+			if (!string.IsNullOrEmpty(validateConfig.SyncStartDate))
+			{
+				_ = DateTime.Parse(validateConfig.SyncStartDate);
+				if (validateConfig.SyncIntervalDays <= 0)
+				{
+					throw new Exception("SyncIntervalDays must be a value greater than 0 when using SyncStartDate");
+				}
+			}
 			Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
 		}
 
