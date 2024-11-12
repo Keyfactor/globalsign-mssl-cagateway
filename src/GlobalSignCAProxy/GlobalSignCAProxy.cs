@@ -51,6 +51,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 			var requestor = productInfo.ProductParameters["Keyfactor-Requester"];
 			Logger.Debug($"Resolving requesting user as '{requestor}'");
 			var userInfo = userInfoResolver.Resolve(requestor);
+			Logger.Trace("Enrollment parameters:");
+			Logger.Trace($"CSR: {csr}");
+			Logger.Trace($"Subject: {subject}");
+			Logger.Trace($"DNS SANs: {string.Join(",", san["dns"])}");
+			Logger.Trace($"Product: {productInfo.ProductID}");
+			Logger.Trace($"Product Params: {string.Join(";", productInfo.ProductParameters.Select(p => p.Key.ToString() + "=" + p.Value.ToString()))}");
 
 			try
 			{
