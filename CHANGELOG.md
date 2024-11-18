@@ -23,5 +23,5 @@ Better datetime parsing of returned certificates
 Fix for adding additional SANs to certificate requests
 
 1.1.0
-Add ability to page inventory
+Add ability to page inventory  
 Fix to remove AD-dependence
