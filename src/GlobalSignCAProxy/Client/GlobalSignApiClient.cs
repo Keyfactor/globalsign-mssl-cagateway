@@ -37,14 +37,39 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 			OrderService = new ManagedSSLService() { Url = config.GetUrl(GlobalSignServiceType.ORDER) };
 		}
 
-		public List<OrderDetail> GetCertificatesForSync(bool fullSync, DateTime? lastSync)
+		public List<OrderDetail> GetCertificatesForSync(bool fullSync, DateTime? lastSync, DateTime startDate, int intervalDays)
 		{
 			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
 			using (this.QueryService)
 			{
 				if (fullSync)
 				{
-					return GetCertificatesByDateRange(DateTime.MinValue, DateTime.UtcNow);
+					if (startDate > new DateTime(2000, 01, 01))
+					{
+						DateTime finalStop = DateTime.UtcNow;
+						List<OrderDetail > certs = new List<OrderDetail>();
+						DateTime endDate = startDate.AddDays(intervalDays);
+						if (endDate > finalStop)
+						{
+							endDate = finalStop;
+						}
+						certs.AddRange(GetCertificatesByDateRange(startDate, endDate));
+						while (endDate < finalStop)
+						{
+							startDate = endDate.AddSeconds(1);
+							endDate = startDate.AddDays(intervalDays);
+							if (endDate > finalStop)
+							{
+								endDate = finalStop;
+							}
+							certs.AddRange(GetCertificatesByDateRange(startDate, endDate));
+						}
+						return certs;
+					}
+					else
+					{
+						return GetCertificatesByDateRange(startDate, DateTime.UtcNow);
+					}					
 				}
 				else //Incremental Sync
 				{
