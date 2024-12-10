@@ -51,12 +51,16 @@ The following sections will breakdown the required configurations for the AnyGat
 
 ## Templates
 The Template section will map the CA's SSL profile to an AD template. The Lifetime parameter is required and represents the certificate duration in months. 
+* ```ContactName```
+The name to pass to GlobalSign as the contact name for enrollments. OPTIONAL if Active Directory authentication is used in Keyfactor Command, in that case it can look up the name of the requesting user. Value provided in this config field overrides AD lookups.
+
  ```json
   "Templates": {
 	"WebServer": {
       "ProductID": "PV_SHA2",
       "Parameters": {
-		"Lifetime":"12"
+		"Lifetime":"12",
+		"ContactName":"John Doe"
       }
    }
 }
@@ -144,6 +148,10 @@ This is the number of seconds between retries when attempting to download a cert
 This is the username that will be used to connect to the GlobalSign API
 * ```Password```
 This is the password that will be used to connect to the GlobalSign API
+* ```SyncStartDate```  
+OPTIONAL: If provided, full syncs will start at the specified date.
+* ```SyncIntervalDays```  
+OPTIONAL: Required if SyncStartDate is used. Specifies how to page the certificate sync. Should be a value such that no interval of that length contains > 500 certificate enrollments.
 
 ```json
   "CAConnection": {
