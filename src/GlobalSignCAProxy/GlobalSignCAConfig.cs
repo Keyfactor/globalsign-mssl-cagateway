@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using query = Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Query;
 using order = Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
+using System.Diagnostics.Contracts;
 
 namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 {
@@ -21,6 +22,9 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
         public int PickupDelay { get; set; }
         public string Username { get; set; } 
         public string Password { get; set; }
+
+		public string SyncStartDate { get; set; }
+		public int SyncIntervalDays { get; set; }
 
         public string GetUrl(GlobalSignServiceType queryType)
         {
