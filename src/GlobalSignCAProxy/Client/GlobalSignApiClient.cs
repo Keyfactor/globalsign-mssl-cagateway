@@ -294,6 +294,10 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				}
 				Logger.Trace($"Product Code: {rawRequest.OrderRequestParameter.ProductCode}");
 				Logger.Trace($"Order Kind: {rawRequest.OrderRequestParameter.OrderKind}");
+				if (!string.IsNullOrEmpty(rawRequest.OrderRequestParameter.BaseOption))
+				{
+					Logger.Trace($"Order Base Option: {rawRequest.OrderRequestParameter.BaseOption}");
+				}
 				var response = OrderService.PVOrder(enrollRequest.Request);
 				if (response.OrderResponseHeader.SuccessCode == 0)
 				{
