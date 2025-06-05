@@ -6,6 +6,8 @@
 // and limitations under the License.
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 {
@@ -37,21 +39,41 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
                         List<SANEntry> sans = new List<SANEntry>();
                         foreach (string item in SANs)
                         {
-                            SANEntry entry = new SANEntry();
-                            entry.SubjectAltName = item;
-                            if (item.StartsWith("*"))
+							if (string.Equals(item, CommonName, System.StringComparison.OrdinalIgnoreCase))
+							{
+								Logger.Info($"SAN Entry {item} matches CN, removing from request");
+								continue;
+							}
+							SANEntry entry = new SANEntry();
+							entry.SubjectAltName = item;
+							StringBuilder sb = new StringBuilder();
+							sb.Append($"Adding SAN entry of type ");
+							if (item.StartsWith("*"))
                             {
                                 entry.SubjectAltName = "13";
-                            }
+								sb.Append("WILDCARD");
+							}
                             else
                             {
                                 entry.SubjectAltName = "7";
-                            }
-                        }
+								sb.Append("FQDN");
+							}
+							sb.Append($" and value {item} to request");
+							Logger.Info(sb.ToString());
+							sans.Add(entry);
+						}
                         request.SANEntries = sans.ToArray();
                     }
                 }
-                ValidityPeriod validityPeriod = new ValidityPeriod
+				List<Option> options = new List<Option>();
+				if (request.SANEntries.Count() > 0)
+				{
+					var opt = new Option();
+					opt.OptionName = "SAN";
+					opt.OptionValue = "True";
+					options.Add(opt);
+				}
+				ValidityPeriod validityPeriod = new ValidityPeriod
                 {
                     Months = Months
                 };
@@ -63,8 +85,13 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
                     CSR = CSR,
                     RenewalTargetOrderID = RenewalTargetOrderId,
                     ValidityPeriod = validityPeriod,
-                };
-                return request;
+					Options = options.ToArray()
+				};
+				if (!string.IsNullOrEmpty(BaseOption))
+				{
+					request.OrderRequestParameter.BaseOption = BaseOption;
+				}
+				return request;
             }
         }
 
