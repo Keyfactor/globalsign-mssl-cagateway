@@ -47,6 +47,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 		public override EnrollmentResult Enroll(ICertificateDataReader certificateDataReader, string csr, string subject, Dictionary<string, string[]> san, EnrollmentProductInfo productInfo, PKIConstants.X509.RequestFormat requestFormat, RequestUtilities.EnrollmentType enrollmentType)
 		{
 			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
+			StringBuilder sb = new StringBuilder();
+			foreach (var key in productInfo.ProductParameters.Keys)
+			{
+				sb.AppendLine($"{key}: {productInfo.ProductParameters[key]}");
+			}
+			Logger.Trace($"Beginning enrollment for request with subject: {subject}\nParameters:\n{sb.ToString()}");
 			string requesterName = "";
 			if (productInfo.ProductParameters.ContainsKey("ContactName") && !string.IsNullOrEmpty(productInfo.ProductParameters["ContactName"]))
 			{
