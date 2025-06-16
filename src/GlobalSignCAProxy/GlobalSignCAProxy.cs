@@ -135,7 +135,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				{
 					foreach (string dnsSan in sanDict["dns"])
 					{
-						var tempDomain = validDomains.Where(d => dnsSan.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+						var tempDomain = validDomains.Where(d => dnsSan.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 						if (tempDomain != null)
 						{
 							Logger.Debug($"SAN Domain match found for SAN: {dnsSan}");
@@ -147,7 +147,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				}
 				else
 				{
-					domain = validDomains.Where(d => commonName.EndsWith(d.DomainName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+					domain = validDomains.Where(d => commonName.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 				}
 
 				if (domain == null)

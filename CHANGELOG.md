@@ -27,4 +27,5 @@ Add ability to page inventory
 Fix to remove AD-dependence  
 
 1.1.1
-Hotfixes for BaseOption flag for Renewal workflow
+Hotfixes for BaseOption flag for Renewal workflow  
+Hotfix for domain lookup
