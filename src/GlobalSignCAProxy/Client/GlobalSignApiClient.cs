@@ -294,6 +294,10 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				}
 				Logger.Trace($"Product Code: {rawRequest.OrderRequestParameter.ProductCode}");
 				Logger.Trace($"Order Kind: {rawRequest.OrderRequestParameter.OrderKind}");
+				if (!string.IsNullOrEmpty(rawRequest.OrderRequestParameter.BaseOption))
+				{
+					Logger.Trace($"Order Base Option: {rawRequest.OrderRequestParameter.BaseOption}");
+				}
 				var response = OrderService.PVOrder(enrollRequest.Request);
 				if (response.OrderResponseHeader.SuccessCode == 0)
 				{
@@ -344,6 +348,23 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 			Logger.MethodEntry(ILogExtensions.MethodLogLevel.Debug);
 			using (this.OrderService)
 			{
+				var rawRequest = renewRequest.Request;
+				Logger.Trace($"Request details:");
+				Logger.Trace($"Profile ID: {rawRequest.MSSLProfileID}");
+				Logger.Trace($"Domain ID: {rawRequest.MSSLDomainID}");
+				Logger.Trace($"Contact Info: {rawRequest.ContactInfo.FirstName}, {rawRequest.ContactInfo.LastName}, {rawRequest.ContactInfo.Email}, {rawRequest.ContactInfo.Phone}");
+				Logger.Trace($"SAN Count: {rawRequest.SANEntries.Count()}");
+				if (rawRequest.SANEntries.Count() > 0)
+				{
+					Logger.Trace($"SANs: {string.Join(",", rawRequest.SANEntries.Select(s => s.SubjectAltName))}");
+				}
+				Logger.Trace($"Product Code: {rawRequest.OrderRequestParameter.ProductCode}");
+				Logger.Trace($"Order Kind: {rawRequest.OrderRequestParameter.OrderKind}");
+				if (!string.IsNullOrEmpty(rawRequest.OrderRequestParameter.BaseOption))
+				{
+					Logger.Trace($"Order Base Option: {rawRequest.OrderRequestParameter.BaseOption}");
+				}
+				Logger.Trace($"Renewal Target: {rawRequest.OrderRequestParameter.RenewalTargetOrderID}");
 				var response = OrderService.PVOrder(renewRequest.Request);
 				if (response.OrderResponseHeader.SuccessCode == 0)
 				{
@@ -370,7 +391,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 							};
 					}
 				}
-				GlobalSignError err = GlobalSignErrorIndex.GetGlobalSignError(int.Parse(response.OrderResponseHeader.Errors[0].ErrorCode));
+				int errorCode = int.Parse(response.OrderResponseHeader.Errors[0].ErrorCode);
+				GlobalSignError err = GlobalSignErrorIndex.GetGlobalSignError(errorCode);
+				if (errorCode <= -101 && errorCode >= -104) // Invalid parameter errors, provide more information
+				{
+					err.ErrorDetails = string.Format(err.ErrorDetails, response.OrderResponseHeader.Errors[0].ErrorField);
+				}
 				foreach (var e in response.OrderResponseHeader.Errors)
 				{
 					Logger.Error($"{e.ErrorCode}|{e.ErrorField}|{e.ErrorMessage}");

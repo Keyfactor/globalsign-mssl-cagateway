@@ -24,4 +24,8 @@ Fix for adding additional SANs to certificate requests
 
 1.1.0
 Add ability to page inventory  
-Fix to remove AD-dependence
+Fix to remove AD-dependence  
+
+1.1.1
+Hotfixes for BaseOption flag for Renewal workflow  
+Hotfix for domain lookup
