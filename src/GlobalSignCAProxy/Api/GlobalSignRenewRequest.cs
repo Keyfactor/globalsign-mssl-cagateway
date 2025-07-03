@@ -50,12 +50,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 							sb.Append($"Adding SAN entry of type ");
 							if (item.StartsWith("*"))
                             {
-                                entry.SubjectAltName = "13";
+                                entry.SANOptionType = "13";
 								sb.Append("WILDCARD");
 							}
                             else
                             {
-                                entry.SubjectAltName = "7";
+                                entry.SANOptionType = "7";
 								sb.Append("FQDN");
 							}
 							sb.Append($" and value {item} to request");

@@ -152,6 +152,8 @@ This is the password that will be used to connect to the GlobalSign API
 OPTIONAL: If provided, full syncs will start at the specified date.
 * ```SyncIntervalDays```  
 OPTIONAL: Required if SyncStartDate is used. Specifies how to page the certificate sync. Should be a value such that no interval of that length contains > 500 certificate enrollments.
+* ```SyncProducts```  
+OPTIONAL: If provided as a comma-separated list of product IDs, will limit the certificate sync to only certificates of those products. If blank or not provided, will sync all certs.
 
 ```json
   "CAConnection": {
@@ -159,7 +161,10 @@ OPTIONAL: Required if SyncStartDate is used. Specifies how to page the certifica
 	"PickupRetries":5,
 	"PickupDelay":150,
 	"Username":"PAR12344_apiuser",
-	"Password":"password"
+	"Password":"password",
+	"SyncStartDate":"2020-01-01",
+	"SyncIntervalDays":30,
+	"SyncProducts":"PV_SHA2, PEV_SHA2"
   },
 ```
 ## GatewayRegistration
