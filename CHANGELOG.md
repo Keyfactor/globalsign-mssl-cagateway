@@ -28,4 +28,7 @@ Fix to remove AD-dependence
 
 1.1.1
 Hotfixes for BaseOption flag for Renewal workflow  
-Hotfix for domain lookup
+Hotfix for domain lookup  
+
+1.1.2
+Hotfix for renewal workflow
