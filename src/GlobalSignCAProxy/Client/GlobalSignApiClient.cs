@@ -298,7 +298,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				{
 					Logger.Trace($"Order Base Option: {rawRequest.OrderRequestParameter.BaseOption}");
 				}
-				var response = OrderService.PVOrder(enrollRequest.Request);
+				var response = OrderService.PVOrder(rawRequest);
 				if (response.OrderResponseHeader.SuccessCode == 0)
 				{
 					Logger.Debug($"Enrollment request successfully submitted");
@@ -365,7 +365,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 					Logger.Trace($"Order Base Option: {rawRequest.OrderRequestParameter.BaseOption}");
 				}
 				Logger.Trace($"Renewal Target: {rawRequest.OrderRequestParameter.RenewalTargetOrderID}");
-				var response = OrderService.PVOrder(renewRequest.Request);
+				var response = OrderService.PVOrder(rawRequest);
 				if (response.OrderResponseHeader.SuccessCode == 0)
 				{
 					Logger.Debug($"Renewal request successfully submitted");
