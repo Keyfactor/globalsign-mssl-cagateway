@@ -25,6 +25,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 
 		public string SyncStartDate { get; set; }
 		public int SyncIntervalDays { get; set; }
+		public string SyncProducts { get; set; }
 
         public string GetUrl(GlobalSignServiceType queryType)
         {
