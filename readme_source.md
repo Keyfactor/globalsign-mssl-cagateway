@@ -52,7 +52,9 @@ The following sections will breakdown the required configurations for the AnyGat
 ## Templates
 The Template section will map the CA's SSL profile to an AD template. The Lifetime parameter is required and represents the certificate duration in months. 
 * ```ContactName```
-The name to pass to GlobalSign as the contact name for enrollments. OPTIONAL if Active Directory authentication is used in Keyfactor Command, in that case it can look up the name of the requesting user. Value provided in this config field overrides AD lookups.
+The name to pass to GlobalSign as the contact name for enrollments. OPTIONAL if Active Directory authentication is used in Keyfactor Command, in that case it can look up the name of the requesting user. Value provided in this config field overrides AD lookups.  
+* ```MSSLProfileID```
+OPTIONAL: If specified, enrollments will use that profile ID for domain lookups. If not provided, domain lookup will be done based on the Common Name or first DNS SAN. Useful if your GlobalSign account has multiple domain objects with the same domain string, or subdomains (e.g. sub.test.com vs test.com).
 
  ```json
   "Templates": {
@@ -60,7 +62,8 @@ The name to pass to GlobalSign as the contact name for enrollments. OPTIONAL if 
       "ProductID": "PV_SHA2",
       "Parameters": {
 		"Lifetime":"12",
-		"ContactName":"John Doe"
+		"ContactName":"John Doe",
+		"MSSLProfileID":"123456"
       }
    }
 }
