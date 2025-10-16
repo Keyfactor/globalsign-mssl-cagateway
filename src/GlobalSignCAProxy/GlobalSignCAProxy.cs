@@ -19,6 +19,7 @@ using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 
 using Newtonsoft.Json;
 
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Org.BouncyCastle.Crypto.Tls;
 
 using System;
@@ -272,8 +273,31 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				DateTime? syncFrom = certificateAuthoritySyncInfo.DoFullSync ? fullSyncFrom : certificateAuthoritySyncInfo.OverallLastSync;
 				var certs = apiClient.GetCertificatesForSync(certificateAuthoritySyncInfo.DoFullSync, syncFrom, fullSyncFrom, Config.SyncIntervalDays);
 
-				foreach (var c in certs)
+				bool productFilter = false;
+				List<string> products = null;
+				if (!string.IsNullOrEmpty(Config.SyncProducts))
 				{
+					products = Config.SyncProducts.Split(',').ToList();
+					products.ForEach(p => p.ToUpper());
+					productFilter = true;
+                }
+
+				foreach (var c in certs)
+				{	
+					if (productFilter)
+					{
+						bool prodMatch = false;
+						if (c.OrderInfo?.ProductCode != null && products.Contains(c.OrderInfo.ProductCode.ToUpper()))
+						{
+							prodMatch = true;
+						}
+						if (!prodMatch)
+						{
+							Logger.Info($"Found certificate with product code {c.OrderInfo?.ProductCode}, which does not match the filter criteria. Skipping.");
+							continue;
+						}
+					}
+
 					GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), c.CertificateInfo.CertificateStatus);
 					DateTime? subDate = DateTime.TryParse(c.OrderInfo?.OrderDate, out DateTime orderDate) ? orderDate : (DateTime?)null;
 					DateTime? resDate = DateTime.TryParse(c.OrderInfo?.OrderCompleteDate, out DateTime completeDate) ? completeDate : (DateTime?)null;
