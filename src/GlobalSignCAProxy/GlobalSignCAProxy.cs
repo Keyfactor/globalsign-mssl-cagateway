@@ -19,6 +19,7 @@ using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 
 using Newtonsoft.Json;
 
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Org.BouncyCastle.Crypto.Tls;
 
 using System;
@@ -97,6 +98,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				// If no CN is found, go through the DNS Name SANs in order, and find a domain that maches the end of one of those SANs
 				// If a match is found, set the common name to that SAN (GlobalSign API requires the CommonName field be populated)
 				string commonName = null;
+				List<DomainDetail> matchedDomains = null;
 				DomainDetail domain = null;
 				var allDomains = apiClient.GetDomains();
 				// Only acccept domains that are able to issue certificates
@@ -131,28 +133,45 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 	
 				var sanDict = new Dictionary<string, string[]>(san, StringComparer.OrdinalIgnoreCase);
 				Logger.Trace($"DNS SAN Count: {sanDict["dns"].Count()}");
+
 				if (commonName == null)
 				{
-					foreach (string dnsSan in sanDict["dns"])
+					if (sanDict["dns"].Count() > 0)
 					{
-						var tempDomain = validDomains.Where(d => dnsSan.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-						if (tempDomain != null)
-						{
-							Logger.Debug($"SAN Domain match found for SAN: {dnsSan}");
-							domain = tempDomain;
-							commonName = dnsSan;
-							break;
-						}
+						string dnsSan = sanDict["dns"][0];
+						matchedDomains = validDomains.Where(d => dnsSan.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).ToList();
+						commonName = dnsSan;
 					}
 				}
 				else
 				{
-					domain = validDomains.Where(d => commonName.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+					matchedDomains = validDomains.Where(d => commonName.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).ToList();
 				}
 
-				if (domain == null)
+				if (matchedDomains == null || matchedDomains.Count == 0)
 				{
 					throw new Exception("Unable to determine GlobalSign domain");
+				}
+
+				if (matchedDomains.Count == 1)
+				{
+					domain = matchedDomains[0];
+				}
+				else
+				{
+					if (productInfo.ProductParameters.ContainsKey("MSSLProfileID"))
+					{
+						var profID = productInfo.ProductParameters["MSSLProfileID"];
+						var tempDomain = matchedDomains.Where(d => d.MSSLProfileID.Equals(profID, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+						if (tempDomain != null)
+						{
+							domain = tempDomain;
+						}
+						else
+						{
+							throw new Exception($"No domain matching common name {commonName} has provided MSSLProfileID of {profID}. Check configuration.");
+						}
+					}
 				}
 
 				Logger.Debug($"Domain info:\nDomain Name: {domain?.DomainName}\nMsslDomainId: {domain?.DomainID}\nMsslProfileId: {domain?.MSSLProfileID}");
@@ -272,8 +291,31 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 				DateTime? syncFrom = certificateAuthoritySyncInfo.DoFullSync ? fullSyncFrom : certificateAuthoritySyncInfo.OverallLastSync;
 				var certs = apiClient.GetCertificatesForSync(certificateAuthoritySyncInfo.DoFullSync, syncFrom, fullSyncFrom, Config.SyncIntervalDays);
 
-				foreach (var c in certs)
+				bool productFilter = false;
+				List<string> products = null;
+				if (!string.IsNullOrEmpty(Config.SyncProducts))
 				{
+					products = Config.SyncProducts.Split(',').ToList();
+					products.ForEach(p => p.ToUpper());
+					productFilter = true;
+                }
+
+				foreach (var c in certs)
+				{	
+					if (productFilter)
+					{
+						bool prodMatch = false;
+						if (c.OrderInfo?.ProductCode != null && products.Contains(c.OrderInfo.ProductCode.ToUpper()))
+						{
+							prodMatch = true;
+						}
+						if (!prodMatch)
+						{
+							Logger.Info($"Found certificate with product code {c.OrderInfo?.ProductCode}, which does not match the filter criteria. Skipping.");
+							continue;
+						}
+					}
+
 					GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), c.CertificateInfo.CertificateStatus);
 					DateTime? subDate = DateTime.TryParse(c.OrderInfo?.OrderDate, out DateTime orderDate) ? orderDate : (DateTime?)null;
 					DateTime? resDate = DateTime.TryParse(c.OrderInfo?.OrderCompleteDate, out DateTime completeDate) ? completeDate : (DateTime?)null;
