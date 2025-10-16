@@ -34,4 +34,5 @@ Hotfix for domain lookup
 Hotfix for renewal workflow  
 
 1.2.0
-Add SyncProducts config to filter certificate sync by product ID
+Add SyncProducts config to filter certificate sync by product ID  
+Add ability to manually specify MSSLProfileID per template to use for domain lookup  
