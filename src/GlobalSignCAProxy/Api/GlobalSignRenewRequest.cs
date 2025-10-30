@@ -44,7 +44,8 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 								Logger.Info($"SAN Entry {item} matches CN, removing from request");
 								continue;
 							}
-							if (string.Equals(item, $"*.{CommonName}", System.StringComparison.OrdinalIgnoreCase))
+							if (string.Equals(item, $"*.{CommonName}", System.StringComparison.OrdinalIgnoreCase)
+								|| string.Equals($"*.{item}", CommonName, System.StringComparison.OrdinalIgnoreCase))
 							{
 								Logger.Info($"SAN Entry {item} is the same base domain as the wildcard CN, removing from request");
 								continue;
