@@ -36,3 +36,4 @@ Hotfix for renewal workflow
 1.2.0
 Add SyncProducts config to filter certificate sync by product ID  
 Add ability to manually specify MSSLProfileID per template to use for domain lookup  
+Bugfix: Treat SANs that match the base domain of a wildcard CN as identical for the purpose of removing duplicates  
