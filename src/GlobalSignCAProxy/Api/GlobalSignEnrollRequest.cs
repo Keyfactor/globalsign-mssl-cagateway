@@ -90,6 +90,12 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 								Logger.Info($"SAN Entry {item} matches CN, removing from request");
 								continue;
 							}
+							if (string.Equals(item, $"*.{CommonName}", System.StringComparison.OrdinalIgnoreCase)
+								|| string.Equals($"*.{item}", CommonName, System.StringComparison.OrdinalIgnoreCase))
+							{
+								Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards, removing from request");
+								continue;
+							}
 							SANEntry entry = new SANEntry();
 							entry.SubjectAltName = item;
 							StringBuilder sb = new StringBuilder();
