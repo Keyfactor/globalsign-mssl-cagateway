@@ -90,10 +90,26 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 								Logger.Info($"SAN Entry {item} matches CN, removing from request");
 								continue;
 							}
-							if (string.Equals(item, $"*.{CommonName}", System.StringComparison.OrdinalIgnoreCase)
-								|| string.Equals($"*.{item}", CommonName, System.StringComparison.OrdinalIgnoreCase))
+							string trimCN = CommonName, trimItem = item;
+							if (trimCN.StartsWith("*."))
 							{
-								Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards, removing from request");
+								trimCN = trimCN.Substring(2);
+							}
+							else if (trimCN.StartsWith("www."))
+							{
+								trimCN = trimCN.Substring(4);
+							}
+							if (trimItem.StartsWith("*."))
+							{
+								trimItem = trimItem.Substring(2);
+							}
+							else if (trimItem.StartsWith("www."))
+							{
+								trimItem = trimItem.Substring(4);
+							}
+							if (string.Equals(trimCN, trimItem, System.StringComparison.OrdinalIgnoreCase))
+							{
+								Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
 								continue;
 							}
 							SANEntry entry = new SANEntry();
