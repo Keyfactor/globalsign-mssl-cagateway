@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Services.Configuration;
 
@@ -139,13 +140,15 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 					if (sanDict["dns"].Count() > 0)
 					{
 						string dnsSan = sanDict["dns"][0];
-						matchedDomains = validDomains.Where(d => dnsSan.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).ToList();
+						matchedDomains = validDomains.Where(d => dnsSan.Equals(d.DomainName, StringComparison.OrdinalIgnoreCase)
+								|| dnsSan.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).ToList();
 						commonName = dnsSan;
 					}
 				}
 				else
 				{
-					matchedDomains = validDomains.Where(d => commonName.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).ToList();
+					matchedDomains = validDomains.Where(d => commonName.Equals(d.DomainName, StringComparison.OrdinalIgnoreCase)
+							|| commonName.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).ToList();
 				}
 
 				if (matchedDomains == null || matchedDomains.Count == 0)
