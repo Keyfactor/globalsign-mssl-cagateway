@@ -90,6 +90,29 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 								Logger.Info($"SAN Entry {item} matches CN, removing from request");
 								continue;
 							}
+							string trimCN = CommonName, trimItem = item;
+							if (CommonName.StartsWith("*."))
+							{
+								trimCN = CommonName.Substring(2).ToLower();
+								trimItem = item.ToLower();
+								List<string> equivs = new List<string> { $"*.{trimCN}", $"www.{trimCN}", $"{trimCN}" };
+								if (equivs.Contains(trimItem))
+								{
+									Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
+									continue;
+								}
+							}
+							else if (CommonName.StartsWith("www."))
+							{
+								trimCN = CommonName.Substring(4).ToLower();
+								trimItem = item.ToLower();
+								List<string> equivs = new List<string> { $"www.{trimCN}", $"{trimCN}" };
+								if (equivs.Contains(trimItem))
+								{
+									Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
+									continue;
+								}
+							}
 							SANEntry entry = new SANEntry();
 							entry.SubjectAltName = item;
 							StringBuilder sb = new StringBuilder();
@@ -138,5 +161,8 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 				return request;
 			}
 		}
+
 	}
 }
+
+
