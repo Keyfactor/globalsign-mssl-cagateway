@@ -90,27 +90,26 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 								Logger.Info($"SAN Entry {item} matches CN, removing from request");
 								continue;
 							}
-							string trimCN = CommonName, trimItem = item;
-							if (trimCN.StartsWith("*."))
+							string trimCN = CommonName;
+							if (CommonName.StartsWith("*."))
 							{
-								trimCN = trimCN.Substring(2);
+								trimCN = CommonName.Substring(2);
+								List<string> equivs = new List<string> { $"*.{trimCN}", $"www.{trimCN}", $"{trimCN}" };
+								if (equivs.Contains(item, StringComparer.OrdinalIgnoreCase))
+								{
+									Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
+									continue;
+								}
 							}
-							else if (trimCN.StartsWith("www."))
+							else if (CommonName.StartsWith("www."))
 							{
-								trimCN = trimCN.Substring(4);
-							}
-							if (trimItem.StartsWith("*."))
-							{
-								trimItem = trimItem.Substring(2);
-							}
-							else if (trimItem.StartsWith("www."))
-							{
-								trimItem = trimItem.Substring(4);
-							}
-							if (string.Equals(trimCN, trimItem, System.StringComparison.OrdinalIgnoreCase))
-							{
-								Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
-								continue;
+								trimCN = CommonName.Substring(4);
+								List<string> equivs = new List<string> { $"www.{trimCN}", $"{trimCN}" };
+								if (equivs.Contains(item, StringComparer.OrdinalIgnoreCase))
+								{
+									Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
+									continue;
+								}
 							}
 							SANEntry entry = new SANEntry();
 							entry.SubjectAltName = item;
@@ -160,5 +159,6 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 				return request;
 			}
 		}
+
 	}
 }
