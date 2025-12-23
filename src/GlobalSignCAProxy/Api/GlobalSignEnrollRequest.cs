@@ -90,12 +90,13 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 								Logger.Info($"SAN Entry {item} matches CN, removing from request");
 								continue;
 							}
-							string trimCN = CommonName;
+							string trimCN = CommonName, trimItem = item;
 							if (CommonName.StartsWith("*."))
 							{
-								trimCN = CommonName.Substring(2);
+								trimCN = CommonName.Substring(2).ToLower();
+								trimItem = item.ToLower();
 								List<string> equivs = new List<string> { $"*.{trimCN}", $"www.{trimCN}", $"{trimCN}" };
-								if (equivs.Contains(item, System.StringComparison.OrdinalIgnoreCase))
+								if (equivs.Contains(trimItem))
 								{
 									Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
 									continue;
@@ -103,9 +104,10 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 							}
 							else if (CommonName.StartsWith("www."))
 							{
-								trimCN = CommonName.Substring(4);
+								trimCN = CommonName.Substring(4).ToLower();
+								trimItem = item.ToLower();
 								List<string> equivs = new List<string> { $"www.{trimCN}", $"{trimCN}" };
-								if (equivs.Contains(item, System.StringComparison.OrdinalIgnoreCase))
+								if (equivs.Contains(trimItem))
 								{
 									Logger.Info($"SAN Entry {item} is equivalent to CN ignoring wildcards or www prefix, removing from request");
 									continue;
@@ -162,4 +164,5 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Api
 
 	}
 }
+
 
