@@ -151,11 +151,6 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 							|| commonName.EndsWith($".{d.DomainName}", StringComparison.OrdinalIgnoreCase)).ToList();
 				}
 
-				if (matchedDomains == null || matchedDomains.Count == 0)
-				{
-					throw new Exception("Unable to determine GlobalSign domain");
-				}
-
 				if (matchedDomains.Count == 1)
 				{
 					domain = matchedDomains[0];
@@ -174,6 +169,10 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 						{
 							throw new Exception($"No domain matching common name {commonName} has provided MSSLProfileID of {profID}. Check configuration.");
 						}
+					}
+					else
+					{
+						throw new Exception("Unable to determine GlobalSign domain, and no MSSLProfileID provided.");
 					}
 				}
 
@@ -478,4 +477,5 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 
 		#endregion Private Methods
 	}
+
 }
