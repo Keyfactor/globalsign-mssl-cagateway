@@ -195,53 +195,50 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				}
 			};
 
-			int retryCounter = 0;
-			while (retryCounter <= Config.PickupRetries)
+			using (var service = this.QueryService)
 			{
-				using (var service = this.QueryService)
-				{
-					var response = service.GetOrderByOrderID(request);
+				var response = service.GetOrderByOrderID(request);
 
-					if (response.OrderResponseHeader.SuccessCode == 0)
+				if (response.OrderResponseHeader.SuccessCode == 0)
+				{
+					Logger.Debug($"Order with order ID {caRequestId} successfully picked up");
+					GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), response.OrderDetail.CertificateInfo.CertificateStatus);
+					if (orderStatus == GlobalSignOrderStatus.Issued)
 					{
-						Logger.Debug($"Order with order ID {caRequestId} successfully picked up");
-						GlobalSignOrderStatus orderStatus = (GlobalSignOrderStatus)Enum.Parse(typeof(GlobalSignOrderStatus), response.OrderDetail.CertificateInfo.CertificateStatus);
-						if (orderStatus == GlobalSignOrderStatus.Issued)
+						DateTime? orderDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDate, out DateTime orderDateTime) ? orderDateTime : (DateTime?)null;
+						DateTime? completeDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderCompleteDate, out DateTime orderCompleteDate) ? orderCompleteDate : (DateTime?)null;
+						DateTime? deactivateDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDeactivatedDate, out DateTime orderDeactivateDate) ? orderDeactivateDate : (DateTime?)null;
+						Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
+						return new CAConnectorCertificate()
 						{
-							DateTime? orderDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDate, out DateTime orderDateTime) ? orderDateTime : (DateTime?)null;
-							DateTime? completeDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderCompleteDate, out DateTime orderCompleteDate) ? orderCompleteDate : (DateTime?)null;
-							DateTime? deactivateDate = DateTime.TryParse(response?.OrderDetail?.OrderInfo?.OrderDeactivatedDate, out DateTime orderDeactivateDate) ? orderDeactivateDate : (DateTime?)null;
-							Logger.MethodExit(ILogExtensions.MethodLogLevel.Debug);
-							return new CAConnectorCertificate()
-							{
-								CARequestID = caRequestId,
-								ProductID = response.OrderDetail.OrderInfo.ProductCode,
-								SubmissionDate = orderDate,
-								ResolutionDate = completeDate,
-								Status = OrderStatus.ConvertToKeyfactorStatus(orderStatus),
-								CSR = response.OrderDetail.Fulfillment.OriginalCSR,
-								Certificate = response.OrderDetail.Fulfillment.ServerCertificate.X509Cert,
-								RevocationReason = 0,
-								RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? deactivateDate : new DateTime?()
-							};
-						}
+							CARequestID = caRequestId,
+							ProductID = response.OrderDetail.OrderInfo.ProductCode,
+							SubmissionDate = orderDate,
+							ResolutionDate = completeDate,
+							Status = OrderStatus.ConvertToKeyfactorStatus(orderStatus),
+							CSR = response.OrderDetail.Fulfillment.OriginalCSR,
+							Certificate = response.OrderDetail.Fulfillment.ServerCertificate.X509Cert,
+							RevocationReason = 0,
+							RevocationDate = orderStatus == GlobalSignOrderStatus.Revoked ? deactivateDate : new DateTime?()
+						};
 					}
-					retryCounter++;
-					string logMsg = $"Pickup certificate failed for order ID {caRequestId}. Attempt {retryCounter} of {Config.PickupRetries}.";
-					if (retryCounter < Config.PickupRetries)
-					{
-						logMsg = logMsg + " Retrying...";
-					}
-					Logger.Debug(logMsg);
-					Thread.Sleep(Config.PickupDelay * 1000);//convert seconds to ms for delay.
 				}
+
+				string logMsg = $"Certificate for order {caRequestId} was not immediately available. Once issued, it should be picked up by the next gateway sync.";
+
+				Logger.Info(logMsg);
 			}
+
 
 			var gsError = GlobalSignErrorIndex.GetGlobalSignError(-9916);
 			string errorMsg = "Unable to pickup certificate during configured pickup window. Check for required approvals in GlobalSign portal. This can also be caused by a delay with GlobalSign, in which case the certificate will get picked up by a future sync";
 			Logger.Error(errorMsg);
 			Logger.Error(gsError.DetailedMessage);
-			throw new UnsuccessfulRequestException(errorMsg, gsError.HResult);
+			return new CAConnectorCertificate()
+			{
+				CARequestID = caRequestId,
+				Status = 13          //ExternalValidation
+			};
 		}
 
 		public List<DomainDetail> GetDomains()
@@ -419,6 +416,16 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 				{
 					Logger.Debug($"Reissue request successfully submitted");
 					var pickupResponse = PickupCertificateById(response.OrderID);
+
+					if (pickupResponse.Status == 13)
+					{
+						return new EnrollmentResult
+						{
+							CARequestID = response.OrderID,
+							Status = (int)CSS.PKI.PKIConstants.Microsoft.RequestDisposition.EXTERNAL_VALIDATION
+						};
+					}
+
 					var cert = CertificateConverterFactory.FromPEM(pickupResponse.Certificate).ToX509Certificate2();
 
 					if (pickupResponse.Status == 20 || (cert.SerialNumber != priorSn))
