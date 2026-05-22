@@ -415,7 +415,11 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign
 
 			if (!string.IsNullOrEmpty(validateConfig.SyncStartDate))
 			{
-				_ = DateTime.Parse(validateConfig.SyncStartDate);
+				var startDate = DateTime.Parse(validateConfig.SyncStartDate);
+				if (startDate < new DateTime(2000, 01, 01))
+				{
+					throw new Exception("SyncStartDate cannot be before 1/1/2000");
+				}
 				if (validateConfig.SyncIntervalDays <= 0)
 				{
 					throw new Exception("SyncIntervalDays must be a value greater than 0 when using SyncStartDate");
