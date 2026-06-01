@@ -39,4 +39,7 @@ Add ability to manually specify MSSLProfileID per template to use for domain loo
 Bugfix: Treat SANs that match the base domain of a wildcard CN as identical for the purpose of removing duplicates  
 
 1.3.0  
-Remove retry logic on reissue, return ExternalValidation if cert is not immediately ready
+Remove retry logic on reissue, return ExternalValidation if cert is not immediately ready  
+
+1.3.1  
+Change incremental sync to use GetModifiedOrders, to pick up orders that are not new but have changed status.
