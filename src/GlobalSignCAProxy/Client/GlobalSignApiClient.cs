@@ -15,6 +15,8 @@ using Keyfactor.Extensions.AnyGateway.GlobalSign.Api;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Order;
 using Keyfactor.Extensions.AnyGateway.GlobalSign.Services.Query;
 
+using Org.BouncyCastle.Asn1.Esf;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -47,7 +49,7 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 					if (startDate > new DateTime(2000, 01, 01))
 					{
 						DateTime finalStop = DateTime.UtcNow;
-						List<OrderDetail > certs = new List<OrderDetail>();
+						List<OrderDetail> certs = new List<OrderDetail>();
 						DateTime endDate = startDate.AddDays(intervalDays);
 						if (endDate > finalStop)
 						{
@@ -68,13 +70,57 @@ namespace Keyfactor.Extensions.AnyGateway.GlobalSign.Client
 					}
 					else
 					{
-						return GetCertificatesByDateRange(startDate, DateTime.UtcNow);
-					}					
+						throw new Exception("SyncStartDate cannot be before 1/1/2000");
+					}
 				}
 				else //Incremental Sync
 				{
-					return GetCertificatesByDateRange(lastSync, DateTime.UtcNow);
+					return GetModifiedCertificatesByDateRange(lastSync, DateTime.UtcNow);
 				}
+			}
+		}
+
+		private List<OrderDetail> GetModifiedCertificatesByDateRange(DateTime? fDate, DateTime? tDate)
+		{
+			var tmpFromDate = fDate ?? DateTime.MinValue;
+			var tmpToDate = tDate ?? DateTime.UtcNow;
+
+			QbV1GetModifiedOrdersRequest req = new QbV1GetModifiedOrdersRequest
+			{
+				QueryRequestHeader = new Services.Query.QueryRequestHeader
+				{
+					AuthToken = Config.GetQueryAuthToken()
+				},
+				FromDate = tmpFromDate.ToString(Constants.DATE_FORMAT_STRING, DateTimeFormatInfo.InvariantInfo),
+				ToDate = tmpToDate.ToString(Constants.DATE_FORMAT_STRING, DateTimeFormatInfo.InvariantInfo),
+				OrderQueryOption = new OrderQueryOption
+				{
+					ReturnOrderOption = "true",
+					ReturnCertificateInfo = "true",
+					ReturnFulfillment = "true",
+					ReturnOriginalCSR = "true"
+				}
+			};
+
+			var modOrdersResponse = QueryService.GetModifiedOrders(req);
+
+			if (modOrdersResponse.QueryResponseHeader.SuccessCode == 0)
+			{
+				var retVal = modOrdersResponse.OrderDetails?.ToList() ?? new List<OrderDetail>();
+				Logger.Debug($"Retrieved {retVal.Count} orders from GlobalSign");
+				return retVal;
+			}
+			else
+			{
+				int errCode = int.Parse(modOrdersResponse.QueryResponseHeader.Errors[0].ErrorCode);
+				Logger.Error($"Unable to retrieve certificates:");
+				foreach (var e in modOrdersResponse.QueryResponseHeader.Errors)
+				{
+					Logger.Error($"{e.ErrorCode} | {e.ErrorField} | {e.ErrorMessage}");
+				}
+				var gsError = GlobalSignErrorIndex.GetGlobalSignError(errCode);
+				Logger.Error(gsError.DetailedMessage);
+				throw new UnsuccessfulRequestException(gsError.Message, gsError.HResult);
 			}
 		}
 
